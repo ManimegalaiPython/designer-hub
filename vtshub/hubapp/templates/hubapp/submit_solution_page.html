@@ -1,0 +1,1489 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<!-- Google Fonts: Inter, DM Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<!-- Sansation font (from CDN) -->
+<link href="https://fonts.cdnfonts.com/css/sansation" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+  :root {
+    --primary: #7C3AED;
+    --primary-light: #8B5CF6;
+    --secondary: #4C1D95;
+    --bg: #F4F2FF;
+    --surface: #FFFFFF;
+    --surface-2: #EDE9FF;
+    --surface-3: #F0EDFF;
+    --border: #E4DFFF;
+    --text: #1A1028;
+    --text-2: #6B7280;
+    --text-3: #9CA3AF;
+    --grad: linear-gradient(135deg, #6C63FF 0%, #8B5CF6 100%);
+    --shadow: 0 2px 16px rgba(124, 58, 237, 0.10);
+    --shadow-md: 0 4px 28px rgba(124, 58, 237, 0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;  /* Body text */
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ========== TYPOGRAPHY RULES ========== */
+  /* Headings → Inter */
+  h1, h2, h3, .page-title, .ch-title, .sec-label, .tips-title,
+  .vetted-title, .success-title, .fb-score-title, .fb-tag,
+  .btn-draft, .btn-submit, .btn-feedback, .btn-browse, .btn-view,
+  .back-link, .pd-breadcrumb a, .sr-pct, .vet-name {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Subheadings → Sansation */
+  .page-sub, .ch-sub, .sr-lbl, .tip-head, .vet-role,
+  .fb-score-num, .fb-thinking, .ai-chip, .drop-txt, .figma-lbl,
+  .attach-hint, .toast, .status-row, .under-review, .competing,
+  .ai-input-label, .vet-rating span, .sr-sub {
+    font-family: 'Sansation', sans-serif;
+  }
+
+  /* Body text & everything else → DM Sans */
+  body, p, span, li, a, button, input, textarea,
+  .bc, .tip-body, .fb-text, .ai-desc-textarea, .desc-textarea,
+  .figma-input, .attach-input, .dropdown, .chip-row, .file-name,
+  .drop-hint, .char-count, .ai-error, .fb-body, .fb-section,
+  .vet-row, .success-sub, .info-box, .submitted-row, .challenge-row {
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--secondary);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
+    pointer-events: none;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .screen {
+    display: none;
+  }
+
+  .screen.active {
+    display: block;
+  }
+
+  .page {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 24px 28px 40px;
+  }
+
+  /* BREADCRUMB */
+  .bc {
+    font-size: 0.9rem;
+    color: var(--text-3);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .bc a {
+    color: var(--text-3);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+
+  .bc a:hover {
+    color: var(--primary);
+  }
+
+  .bc-sep {
+    color: var(--text-3);
+  }
+
+  .page-title {
+    font-weight: 800;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+  }
+
+  .page-sub {
+    font-size: clamp(0.9rem, 4vw, 1rem);
+    color: var(--text-2);
+    margin-bottom: 24px;
+  }
+
+  /* LAYOUT */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 272px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .main-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* CHALLENGE CARD */
+  .challenge-card {
+    background: rgb(239, 239, 241);
+    border-radius: 22px;
+    padding: 15px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid var(--border);
+  }
+
+  .ch-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: 2px;
+  }
+
+  .ch-sub {
+    font-size: 0.9rem;
+    color: black;
+  }
+
+  /* SECTION CARDS */
+  .sec-card {
+    background: var(--surface-3);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  .sec-label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--secondary);
+    margin-bottom: 14px;
+    letter-spacing: 0.2px;
+  }
+
+  /* UPLOAD GRID */
+  .upload-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 560px) {
+    .upload-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* FIGMA BOX */
+  .figma-box {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .figma-box:hover {
+    border-color: var(--primary);
+  }
+
+  .figma-logo {
+    width: 46px;
+    height: 46px;
+    background: #1e1e1e;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .figma-lbl {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .figma-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    outline: none;
+    color: var(--text);
+    background: var(--bg);
+  }
+
+  .figma-input:focus {
+    border-color: var(--primary);
+    background: #fff;
+  }
+
+  /* DROP ZONE */
+  .drop-box {
+    background: var(--grad);
+    border-radius: 12px;
+    padding: 20px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .drop-box.drag-over {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+
+  .drop-icon {
+    width: 46px;
+    height: 46px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+  }
+
+  .drop-icon i {
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  .drop-txt {
+    font-size: 0.95rem;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .btn-browse {
+    background: white;
+    border: none;
+    border-radius: 50px;
+    padding: 7px 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary);
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-browse:hover {
+    transform: translateY(-1px);
+  }
+
+  .drop-hint {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 8px;
+  }
+
+  .file-name {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 6px;
+    word-break: break-all;
+  }
+
+  #fileHidden {
+    display: none;
+  }
+
+  /* AI FEEDBACK */
+  .ai-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .ai-context-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 560px) {
+    .ai-context-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ai-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ai-input-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-2);
+  }
+
+  .ai-text-input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    outline: none;
+    color: var(--text);
+    background: var(--surface);
+  }
+
+  .ai-text-input:focus {
+    border-color: var(--primary);
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .ai-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    color: var(--primary);
+    cursor: pointer;
+    transition: 0.15s;
+    font-weight: 600;
+  }
+
+  .ai-chip:hover {
+    background: var(--surface-2);
+    border-color: var(--primary);
+  }
+
+  .ai-desc-textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    resize: vertical;
+    outline: none;
+    background: var(--surface);
+    height: 80px;
+    color: var(--text);
+  }
+
+  .ai-desc-textarea:focus {
+    border-color: var(--primary);
+  }
+
+  .char-count {
+    font-size: 0.7rem;
+    color: var(--text-3);
+    text-align: right;
+    margin-top: 3px;
+  }
+
+  .btn-feedback {
+    background: var(--grad);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 12px rgba(108, 99, 255, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 12px;
+  }
+
+  .btn-feedback:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-feedback:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .thinking-dots {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .thinking-dots span {
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: tBounce 0.9s ease infinite;
+  }
+
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes tBounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+  }
+
+  .feedback-result {
+    margin-top: 14px;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 0;
+    display: none;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .feedback-result.show {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fb-score-bar {
+    background: var(--grad);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .fb-score-num {
+    font-weight: 800;
+    font-size: 2rem;
+    color: white;
+    line-height: 1;
+  }
+
+  .fb-score-num sub {
+    font-size: 0.8rem;
+  }
+
+  .fb-score-info {
+    flex: 1;
+  }
+
+  .fb-score-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: white;
+    margin-bottom: 4px;
+  }
+
+  .fb-score-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .fb-dot {
+    width: 18px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .fb-dot.on {
+    background: white;
+  }
+
+  .fb-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fb-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .fb-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--surface-2);
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    width: fit-content;
+  }
+
+  .fb-text {
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  .fb-text strong {
+    color: var(--primary);
+  }
+
+  .ai-error {
+    margin-top: 10px;
+    background: #FEF2F2;
+    border: 1.5px solid #FECACA;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #B91C1C;
+    display: none;
+  }
+
+  .ai-error.show {
+    display: block;
+  }
+
+  .fb-thinking {
+    padding: 18px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-2);
+  }
+
+  .fb-thinking-dots span {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: tBounce 0.9s ease infinite;
+    margin-right: 3px;
+  }
+
+  /* DESCRIPTION */
+  .desc-textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    resize: vertical;
+    outline: none;
+    background: var(--surface);
+    height: 100px;
+    color: var(--text);
+  }
+
+  .desc-textarea:focus {
+    border-color: var(--primary);
+  }
+
+  /* ATTACH FILES */
+  .attach-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    background: var(--surface);
+    outline: none;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .attach-input:focus {
+    border-color: var(--primary);
+  }
+
+  .attach-hint {
+    font-size: 0.7rem;
+    color: var(--text-3);
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* BUTTONS */
+  .bottom-btns {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .btn-draft {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 10px 34px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn-draft:hover {
+    background: #f0edff;
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .btn-submit {
+    background: var(--grad);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 34px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 14px rgba(108, 99, 255, 0.28);
+  }
+
+  .btn-submit:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+  }
+
+  .combined-card {
+    background: #ECEAF5;
+    border-radius: var(--radius);
+    border: 1.5px solid #D8B4FE;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px; /* added bottom spacing */
+  }
+
+  .section-divider {
+    height: 1px;
+    background: rgba(124, 58, 237, 0.15);
+    margin: 16px 18px 0 18px;
+  }
+
+  /* SUCCESS RATE */
+  .sr-box {
+    margin: 16px 16px 0 16px;
+    padding: 18px 16px;
+    text-align: center;
+    background: #ECEAF5;
+    border-radius: 12px;
+    border: 1.5px solid #D8B4FE;
+  }
+
+  .sr-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
+  }
+
+  .sr-icon i {
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  .sr-pct {
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--secondary);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .sr-lbl {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .sr-sub {
+    font-size: 0.75rem;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .sr-sub i {
+    color: #EF4444;
+  }
+
+  /* TIPS */
+  .tips-card {
+    padding: 18px 20px;
+  }
+
+  .tips-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .tip-item {
+    margin-bottom: 13px;
+  }
+
+  .tip-head {
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+    color: var(--text);
+  }
+
+  .tip-body {
+    font-size: 0.75rem;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+
+  /* VETTED */
+  .vetted-card {
+    padding: 18px 20px 22px;
+  }
+
+  .vetted-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .vet-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .vet-ava {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .vet-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .vet-role {
+    font-size: 0.7rem;
+    color: var(--text-2);
+  }
+
+  .vet-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .vet-rating i {
+    color: #FBBF24;
+    font-size: 0.8rem;
+  }
+
+  .vet-rating span {
+    font-size: 0.75rem;
+    color: var(--text-2);
+  }
+
+  /* SUCCESS SCREEN */
+  .success-wrap {
+    max-width: 660px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px 40px 36px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    text-align: center;
+  }
+
+  .illo {
+    width: 220px;
+    height: 170px;
+    margin: 0 auto 18px;
+  }
+
+  .illo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .success-title {
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: #321873;
+    margin-bottom: 5px;
+  }
+
+  .success-sub {
+    font-size: 0.8rem;
+    color: #484747;
+    margin-bottom: 26px;
+  }
+
+  .info-box {
+    background: #F3EFFD;
+    border-radius: 14px;
+    padding: 18px 20px 20px;
+    text-align: left;
+    margin-bottom: 18px;
+  }
+
+  .submitted-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #222;
+    margin-bottom: 14px;
+  }
+
+  .submitted-row i {
+    color: #22C55E;
+  }
+
+  .challenge-row {
+    background: #fff;
+    border-radius: 12px;
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    border: 1px solid #EDE9FF;
+  }
+
+  .ch-ico {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: #444;
+    margin-bottom: 18px;
+  }
+
+  .status-row i {
+    color: #7C3AED;
+  }
+
+  .under-review {
+    color: #7C3AED;
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  .btn-wrap {
+    text-align: center;
+  }
+
+  .btn-view {
+    background: linear-gradient(135deg, #6C63FF, #8B5CF6);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 36px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .btn-view:hover {
+    opacity: 0.85;
+    color: #fff;
+  }
+
+  .competing {
+    font-size: 0.7rem;
+    color: #555;
+    margin-bottom: 12px;
+  }
+
+  .back-link {
+    font-size: 0.8rem;
+    color: #7C3AED;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .page {
+      padding: 16px;
+    }
+    .bottom-btns {
+      flex-direction: column;
+      align-items: center;
+    }
+    .btn-draft, .btn-submit {
+      width: 80%;
+    }
+    .success-wrap {
+      margin: 16px;
+      padding: 24px 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .btn-draft, .btn-submit {
+      width: 100%;
+    }
+    .challenge-card {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="toast" id="toast">Draft saved successfully!</div>
+
+<!-- SCREEN 1: FORM -->
+<div class="screen active" id="screen-form">
+  <div class="page">
+    <div class="bc">
+      <a href="{% url 'marketplace' %}">Marketplace</a>
+      <span class="bc-sep">/</span>
+      <a href="{% url 'problem_detail' problem.id %}">{{ problem.title|truncatechars:30 }}</a>
+      <span class="bc-sep">/</span>
+      <span>Solve</span>
+    </div>
+    <div class="page-title">Submit Your Solution</div>
+    <div class="page-sub">Submit your design solution for the problem.</div>
+
+    <div class="main-grid">
+      <div class="left">
+
+        <!-- Challenge Card -->
+        <div class="challenge-card">
+          <img src="{% static 'hubapp/images/netbank.png' %}" alt="Netbank"
+            style="width:60px;height:50px;object-fit:contain;">
+          <div>
+            <div class="ch-title">{{ problem.title }}</div>
+            <div class="ch-sub">{{ problem.company_name|default:"Netbank" }}</div>
+          </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="solutionForm">
+          {% csrf_token %}
+
+          <!-- Upload Design -->
+          <div class="sec-card">
+            <div class="sec-label">Upload Design</div>
+            <div class="upload-grid">
+              <div class="figma-box">
+                <div class="figma-logo">
+                  <svg width="24" height="36" viewBox="0 0 38 57" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.5 9.5 0 0 1 19 28.5z" fill="#1ABCFE" />
+                    <path d="M9.5 47.5A9.5 9.5 0 0 1 19 38v9.5A9.5 9.5 0 0 1 9.5 57z" fill="#0ACF83" />
+                    <path d="M0 38a9.5 9.5 0 0 1 9.5-9.5H19V38a9.5 9.5 0 0 1-19 0z" fill="#FF7262" />
+                    <path d="M0 19A9.5 9.5 0 0 1 9.5 9.5H19V28.5H9.5A9.5 9.5 0 0 1 0 19z" fill="#F24E1E" />
+                    <path d="M19 0h9.5A9.5 9.5 0 0 1 28.5 19H19V0z" fill="#A259FF" />
+                  </svg>
+                </div>
+                <div class="figma-lbl">Figma Link</div>
+                <input class="figma-input" id="figmaLink" type="text" name="figma_link"
+                  placeholder="https://www.figma.com/design/...">
+              </div>
+              <div class="drop-box" id="dropZone" onclick="document.getElementById('fileHidden').click()">
+                <input type="file" id="fileHidden" name="design_files" accept=".jpg,.jpeg,.png,.pdf,.zip" multiple>
+                <div class="drop-icon"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+                <div class="drop-txt">Drag and drop your files here</div>
+                <button type="button" class="btn-browse"
+  onclick="event.stopPropagation(); document.getElementById('fileHidden').click();">
+  Browse Files
+</button>
+                <div class="drop-hint">JPEG, PNG, PDF, ZIP – Up to 50MB total.</div>
+                <div class="file-name" id="fileName"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- AI FEEDBACK -->
+        <div class="sec-card">
+          <div class="ai-header">
+            <div class="sec-label" style="margin-bottom:0;">AI Design Feedback</div>
+            <span
+              style="font-size:0.7rem;color:var(--text-3);background:var(--surface-2);padding:3px 10px;border-radius:20px;border:1px solid var(--border);">Powered
+              by Google Gemini AI</span>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div class="ai-input-group">
+              <label class="ai-input-label">Challenge context (optional)</label>
+              <input class="ai-text-input" id="aiChallenge" type="text" placeholder="e.g. Neobank mobile onboarding"
+                style="width:100%;">
+            </div>
+          </div>
+
+          <div id="figmaIndicator"
+            style="display:none;margin-bottom:12px;padding:7px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;font-size:0.7rem;color:var(--text-2);align-items:center;gap:6px;">
+            <i class="bi bi-link-45deg" style="color:var(--primary);font-size:0.8rem;"></i>
+            <span id="figmaIndicatorText"
+              style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;"></span>
+            <span style="font-size:0.6rem;color:#22C55E;font-weight:600;white-space:nowrap;">✓ Will be reviewed</span>
+          </div>
+
+          <div class="chip-row">
+            <span class="ai-chip" onclick="appendChip('I focused on reducing friction in the sign-up flow.')">Sign-up flow</span>
+            <span class="ai-chip" onclick="appendChip('I designed a dashboard with clear data hierarchy.')">Dashboard</span>
+            <span class="ai-chip" onclick="appendChip('I used micro-interactions to improve user feedback.')">Micro-interactions</span>
+            <span class="ai-chip" onclick="appendChip('I simplified navigation with a bottom tab bar.')">Navigation</span>
+            <span class="ai-chip" onclick="appendChip('I followed accessibility best practices throughout.')">Accessibility</span>
+          </div>
+
+          <div class="ai-desc-wrap">
+            <textarea class="ai-desc-textarea" id="aiDesc"
+              placeholder="Describe your design choices, user flow, key screens, UX decisions..."
+              oninput="updateAICount()"></textarea>
+            <div class="char-count" id="aiCharCount">0 / 1000</div>
+          </div>
+
+          <button class="btn-feedback" id="feedbackBtn" onclick="getAIFeedback()">
+            <i class="bi bi-stars"></i> Get AI Feedback
+          </button>
+
+          <div class="ai-error" id="aiError"></div>
+          <div class="feedback-result" id="feedbackResult"></div>
+        </div>
+
+        <!-- Solution Description -->
+        <div class="sec-card">
+          <div class="sec-label">Solution Description</div>
+          <textarea class="desc-textarea" id="solutionDesc" name="description"
+            placeholder="Explain your design solution (e.g., key decisions, user flow, improvements...)"></textarea>
+        </div>
+
+        <!-- Attach Files -->
+        <div class="sec-card">
+          <div class="sec-label">Attach Files (Optional)</div>
+          <input type="file" class="attach-input" name="attach1" accept=".jpg,.jpeg,.png,.pdf,.zip" multiple>
+          <input type="file" class="attach-input" name="attach2" accept=".jpg,.jpeg,.png,.pdf,.zip" multiple>
+          <span class="attach-hint">You can select multiple files per field. JPEG, PNG, PDF, ZIP – up to 50MB each.</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="bottom-btns">
+          <button class="btn-draft" onclick="saveDraft()">Save Draft</button>
+          <button class="btn-submit" type="submit" form="solutionForm">Submit Solution</button>
+        </div>
+
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="combined-card">
+          <div class="sr-box">
+            <div class="sr-icon"><i class="bi bi-patch-check-fill"></i></div>
+            <div class="sr-pct">{{ problem.designer.success_rate|default:"99" }}%</div>
+            <div class="sr-lbl">Success Rate</div>
+            <div class="sr-sub">
+              <i class="bi bi-heart-fill"></i> {{ problem.designer.rating|default:"4.9" }} / 
+              {{ problem.designer.projects_count|default:"49" }} Projects
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="tips-card">
+            <div class="tips-title">Submission Tips</div>
+            <div class="tip-item">
+              <div class="tip-head">Be clear and structured</div>
+              <div class="tip-body">Present your design in a clear logical manner. Ensure your flow is easy to understand.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-head">Focus on user experience</div>
+              <div class="tip-body">Make sure your solution is intuitive, user-friendly, and reduces friction in the onboarding process.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-head">Explain your decisions</div>
+              <div class="tip-body">Briefly describe your design choices and why you made them.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-head">Show complete flow</div>
+              <div class="tip-body">Include all key screens from start to finish, not just a single UI.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-head">Keep it visually consistent</div>
+              <div class="tip-body">Maintain proper spacing, typography, and color consistency across screens.</div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-head">Submit before deadline</div>
+              <div class="tip-body">Make sure to upload your solution on time to be considered.</div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="vetted-card">
+            <div class="vetted-title">Vetted By</div>
+            <div class="vet-row">
+              <div class="vet-ava">S</div>
+              <div>
+                <div class="vet-name">Sneha Iyer</div>
+                <div class="vet-role">UX Designer</div>
+              </div>
+            </div>
+            <div class="vet-rating">
+              <i class="bi bi-star-fill"></i>
+              <span>4.7 Ratings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: SUCCESS -->
+<div class="screen" id="screen-success">
+  <div class="page">
+    <div class="bc">
+      <a onclick="goBack()">Marketplace</a>
+      <span class="bc-sep">/</span>
+      <a onclick="goBack()">{{ problem.title|truncatechars:30 }}</a>
+      <span class="bc-sep">/</span>
+      <span>Solve</span>
+    </div>
+    <div class="success-wrap">
+      <div class="illo">
+        <img src="{% static 'hubapp/images/image 75.png' %}" alt="Submission successful" />
+      </div>
+      <div class="success-title">Submission Successful !</div>
+      <div class="success-sub">Your design has been submitted.</div>
+      <div class="info-box">
+        <div class="submitted-row">
+          <i class="bi bi-check-circle-fill"></i>
+          Submitted just now
+        </div>
+        <div class="challenge-row">
+          <div class="ch-ico">
+            <img src="{% static 'hubapp/images/netbank.png' %}" alt="Netbank logo" />
+          </div>
+          <div>
+            <div class="ch-title">{{ problem.title }}</div>
+            <div class="ch-sub">{{ problem.company_name|default:"Netbank" }}</div>
+          </div>
+        </div>
+        <div class="status-row">
+          <i class="bi bi-arrow-repeat"></i>
+          Status :&nbsp;<span class="under-review">Under Review</span>
+        </div>
+        <div class="btn-wrap">
+          <a href="{% url 'ai_design_feedback' problem.pk %}" class="btn-view">View Submission</a>
+        </div>
+      </div>
+      <div class="competing">You are now competing with {{ problem.applicants|default:"24" }} talented designers!</div>
+      <a class="back-link" href="{% url 'marketplace' %}">
+        <i class="bi bi-arrow-left"></i> Back to Explore
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Utilities ── */
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function saveDraft() { showToast('Draft saved successfully!'); }
+  function goBack() { showScreen('screen-form'); }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function updateAICount() {
+    const v = document.getElementById('aiDesc').value;
+    document.getElementById('aiCharCount').textContent = v.length + ' / 1000';
+  }
+
+  function appendChip(txt) {
+    const ta = document.getElementById('aiDesc');
+    ta.value = (ta.value ? ta.value + ' ' : '') + txt;
+    updateAICount();
+    ta.focus();
+  }
+
+  function renderFeedback(text) {
+    const result = document.getElementById('feedbackResult');
+    const sectionDefs = [
+      { keys: ['strength', 'what works', 'positive'], label: 'Strengths', icon: 'bi-check-circle' },
+      { keys: ['user flow', 'flow', 'journey'], label: 'User Flow', icon: 'bi-arrow-repeat' },
+      { keys: ['visual', 'aesthetic', 'ui'], label: 'Visual Design', icon: 'bi-palette' },
+      { keys: ['ux', 'usability', 'accessibility'], label: 'UX & Usability', icon: 'bi-person-check' },
+      { keys: ['improve', 'suggest', 'recommend', 'could', 'should'], label: 'Improvements', icon: 'bi-lightning' },
+      { keys: ['typography', 'font', 'type'], label: 'Typography', icon: 'bi-type' },
+      { keys: ['color', 'colour', 'contrast'], label: 'Color & Contrast', icon: 'bi-droplet' },
+      { keys: ['microcopy', 'copy', 'text', 'label'], label: 'Microcopy', icon: 'bi-chat-left-text' },
+      { keys: ['consistency', 'consistent'], label: 'Consistency', icon: 'bi-grid' },
+      { keys: ['overall', 'summary', 'conclusion'], label: 'Overall', icon: 'bi-bar-chart' },
+    ];
+
+    const scoreMatch = text.match(/(\d{1,2})\s*(?:\/|out of)\s*10/i);
+    const score = scoreMatch ? parseInt(scoreMatch[1]) : null;
+    let html = '';
+
+    if (score !== null) {
+      let dots = '';
+      for (let i = 1; i <= 10; i++) dots += `<div class="fb-dot${i <= score ? ' on' : ''}"></div>`;
+      html += `
+      <div class="fb-score-bar">
+        <div class="fb-score-num">${score}<sub>/10</sub></div>
+        <div class="fb-score-info">
+          <div class="fb-score-title">Design Score</div>
+          <div class="fb-score-dots">${dots}</div>
+        </div>
+      </div>`;
+    }
+
+    const paragraphs = text.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+    let sectionsHTML = '';
+    paragraphs.forEach(para => {
+      if (/^\d{1,2}\s*\/\s*10/i.test(para)) return;
+      const lower = para.toLowerCase();
+      let matched = false;
+      for (const def of sectionDefs) {
+        if (def.keys.some(k => lower.startsWith(k) || lower.includes('\n' + k) || new RegExp(`^[#*\\-\\s]*(${k})`, 'i').test(para))) {
+          const body = para.replace(/^[#\-*\s]*([\w &\/]+)[:\-*\s]+/i, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').trim();
+          if (body) {
+            sectionsHTML += `
+            <div class="fb-section">
+              <div class="fb-tag"><i class="bi ${def.icon}"></i> ${def.label}</div>
+              <div class="fb-text">${body}</div>
+            </div>`;
+            matched = true;
+            break;
+          }
+        }
+      }
+      if (!matched) {
+        const clean = para.replace(/^[#\-*\s]+/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        sectionsHTML += `<div class="fb-section"><div class="fb-text">${clean}</div></div>`;
+      }
+    });
+    html += `<div class="fb-body">${sectionsHTML || '<div class="fb-text">' + text + '</div>'}</div>`;
+    result.innerHTML = html;
+    result.classList.add('show');
+  }
+
+  async function getAIFeedback() {
+    const desc = document.getElementById('aiDesc').value.trim();
+    const figma = document.getElementById('figmaLink').value.trim();
+    const challenge = document.getElementById('aiChallenge').value.trim();
+    const btn = document.getElementById('feedbackBtn');
+    const result = document.getElementById('feedbackResult');
+    const errBox = document.getElementById('aiError');
+
+    errBox.classList.remove('show');
+    result.classList.remove('show');
+
+    result.innerHTML = `
+    <div class="fb-thinking">
+      <div class="fb-thinking-dots"><span></span><span></span><span></span></div>
+      Analyzing your design...
+    </div>`;
+    result.classList.add('show');
+
+    btn.disabled = true;
+    btn.innerHTML = `<span class="thinking-dots"><span></span><span></span><span></span></span> Analyzing...`;
+
+    const promptParts = [];
+    if (challenge) promptParts.push(`Challenge: ${challenge}`);
+    if (figma) promptParts.push(`Figma/Prototype Link: ${figma}`);
+    if (desc) promptParts.push(`Design Description:\n${desc}`);
+    if (!promptParts.length) promptParts.push('The user has not provided any details yet. Give general UX design best-practice feedback.');
+
+    const prompt = `You are an expert UX/UI design critic. Give specific, structured, actionable feedback on the following design submission.
+
+${promptParts.join('\n')}
+
+Respond in clearly labelled paragraphs. Use these exact headings (one per paragraph):
+Strengths: ...
+User Flow: ...
+Visual Design: ...
+UX & Usability: ...
+Improvements: (list 3 specific, actionable suggestions)
+Design Score: X/10 — (one sentence justification)
+
+Be direct, constructive, and specific. Keep each paragraph to 2–3 sentences. Use plain English, no markdown bullet points inside paragraphs.`;
+
+    try {
+      const resp = await fetch('/api/gemini/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'gemini-1.5-flash',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await resp.json();
+      if (!resp.ok || data.error) throw new Error(data.error?.message || `API error ${resp.status}`);
+      const text = (data.content || []).map(b => b.text || '').join('').trim();
+      if (!text) throw new Error('Empty response from API.');
+      renderFeedback(text);
+    } catch (err) {
+      result.classList.remove('show');
+      errBox.textContent = '⚠ Could not get feedback: ' + (err.message || 'Unknown error') + '. Please try again.';
+      errBox.classList.add('show');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-stars"></i> Get AI Feedback';
+    }
+  }
+
+  document.getElementById('figmaLink').addEventListener('input', function () {
+    const indicator = document.getElementById('figmaIndicator');
+    const indicatorText = document.getElementById('figmaIndicatorText');
+    const val = this.value.trim();
+    if (val) {
+      indicatorText.textContent = val;
+      indicator.style.display = 'flex';
+    } else {
+      indicator.style.display = 'none';
+    }
+  });
+
+  const fileHidden = document.getElementById('fileHidden');
+  if (fileHidden) {
+    fileHidden.addEventListener('change', function () {
+      const files = Array.from(this.files);
+      const fileNameSpan = document.getElementById('fileName');
+      if (fileNameSpan && files.length) fileNameSpan.textContent = files.map(f => f.name).join(', ');
+    });
+  }
+
+  const dz = document.getElementById('dropZone');
+  if (dz) {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.classList.remove('drag-over');
+      const files = Array.from(e.dataTransfer.files);
+      const dt = new DataTransfer();
+      files.forEach(f => dt.items.add(f));
+      const fileInput = document.getElementById('fileHidden');
+      if (fileInput) fileInput.files = dt.files;
+      const fileNameSpan = document.getElementById('fileName');
+      if (fileNameSpan && files.length) fileNameSpan.textContent = files.map(f => f.name).join(', ');
+    });
+  }
+</script>
+{% endblock %}

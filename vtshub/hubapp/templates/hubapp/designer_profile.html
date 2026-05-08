@@ -1,0 +1,1136 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/sansation" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+  /* ========== ROOT & RESET ========== */
+  :root {
+    --primary: #7C3AED;
+    --primary-light: #8B5CF6;
+    --secondary: #4C1D95;
+    --bg: #F0EEFF;
+    --bg2: #E8E3F8;
+    --card: #FFFFFF;
+    --card-2: #EEE9FF;
+    --card-3: #E5DEFF;
+    --btn-g1: #6C63FF;
+    --btn-g2: #8B5CF6;
+    --shadow-sm: 0 2px 16px rgba(124, 58, 237, 0.08);
+    --shadow-md: 0 8px 32px rgba(124, 58, 237, 0.18);
+    --shadow-card: 0 4px 24px rgba(124, 58, 237, 0.10);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --green: #22C55E;
+    --purple-light: #EDE9FF;
+    --yellow: #FBBF24;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: linear-gradient(155deg, #EFEBFF 0%, #E6E0F8 50%, #EDE8FF 100%);
+    min-height: 100vh;
+    color: #1a1a2e;
+    line-height: 1.5;
+  }
+
+  /* ========== TYPOGRAPHY RULES ========== */
+  /* Headings → Inter */
+  h1, h2, h3, .h1, .h2, .h3,
+  .profile-name, .card-heading, .stat-num, .success-pct,
+  .portfolio-label, .featured-name, .btn-hire, .btn-contact,
+  .btn-view-case, .filter-btn, .meta-stars .review-count {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Subheadings → Sansation */
+  h4, h5, h6, .profile-role, .meta-item, .skill-chip,
+  .ach-item, .avail-item, .featured-sub, .port-label,
+  .success-label, .success-sub, .btn-icon, .edu-title,
+  .exp-title, .reviewer-name, .featured-tag {
+    font-family: 'Sansation', sans-serif;
+  }
+
+  /* Body text & everything else → DM Sans */
+  body, p, span, a, button, .breadcrumb-bar,
+  .about-text, .review-text, .edu-sub, .exp-date,
+  .stat-label, .exp-company, .rev-text {
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ========== RESPONSIVE CONTAINER ========== */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 16px;
+    }
+  }
+
+  /* Page wrapper */
+  .profile-page {
+    padding: 20px 0 70px;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb-bar {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+    color: #aaa;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .breadcrumb-bar a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color .2s;
+  }
+
+  .breadcrumb-bar a:hover {
+    color: var(--primary);
+  }
+
+  .breadcrumb-bar .sep {
+    margin: 0 6px;
+    color: #ccc;
+  }
+
+  /* ========== TOP HEADER CARD ========== */
+  .profile-header {
+    background: linear-gradient(135deg, #e6e2f4, #bda9eb);
+    border-radius: 22px;
+    padding: clamp(20px, 4vw, 24px) clamp(20px, 4vw, 28px);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--btn-g1), var(--btn-g2), #A78BFA);
+    border-radius: 22px 22px 0 0;
+  }
+
+  .profile-avatar-wrap {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #C4B5FD, #8B5CF6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 2.5rem;
+    color: #fff;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, .25);
+  }
+
+  @media (max-width: 560px) {
+    .profile-avatar-wrap {
+      width: 70px;
+      height: 70px;
+      font-size: 2rem;
+    }
+  }
+
+  .profile-avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-info {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .profile-name {
+    font-weight: 800;
+    font-size: clamp(1.4rem, 6vw, 1.8rem);
+    margin-bottom: 2px;
+    letter-spacing: -0.3px;
+  }
+
+  .profile-role {
+    font-size: clamp(0.85rem, 4vw, 1rem);
+    color: #888;
+    margin-bottom: 10px;
+  }
+
+  .profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: center;
+  }
+
+  .meta-stars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .meta-stars .bi-star-fill {
+    color: #FBBF24;
+    font-size: 0.9rem;
+  }
+
+  .meta-stars .review-count {
+    font-size: 0.9rem;
+    margin-left: 5px;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: clamp(0.8rem, 3.5vw, 0.9rem);
+    color: #666;
+  }
+
+  .meta-item i {
+    color: var(--primary);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-contact {
+    background: linear-gradient(135deg, var(--btn-g1), var(--btn-g2));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 9px 26px;
+    font-weight: 700;
+    font-size: clamp(0.8rem, 4vw, 0.9rem);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(108, 99, 255, .35);
+    transition: transform .2s, box-shadow .2s;
+  }
+
+  .btn-contact:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(108, 99, 255, .45);
+    color: #fff;
+  }
+
+  .btn-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--purple-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .btn-icon:hover {
+    background: var(--card-3);
+  }
+
+  .success-box {
+    background: var(--purple-light);
+    border: 1.5px solid #DDD6FE;
+    border-radius: 18px;
+    padding: clamp(12px, 3vw, 18px) clamp(16px, 4vw, 22px);
+    text-align: center;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+
+  .success-check {
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.3rem;
+    margin: 0 auto 8px;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, .3);
+  }
+
+  .success-pct {
+    font-weight: 900;
+    font-size: clamp(1.3rem, 5vw, 1.75rem);
+    color: var(--primary);
+    line-height: 1;
+  }
+
+  .success-label {
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+    color: #666;
+    margin-top: 3px;
+  }
+
+  .success-sub {
+    font-size: clamp(0.65rem, 3vw, 0.75rem);
+    color: #999;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .success-sub i {
+    color: #EF4444;
+    font-size: 0.8rem;
+  }
+
+  /* ========== TWO-COLUMN LAYOUT ========== */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 991px) {
+    .main-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Shared card */
+  .card {
+    background: linear-gradient(135deg, #e6e2f4, #bda9eb);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 18px;
+  }
+
+  .card-heading {
+    font-weight: 800;
+    font-size: clamp(1.1rem, 5vw, 1.3rem);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #111;
+  }
+
+  .card-heading i {
+    color: var(--primary);
+  }
+
+  /* LEFT SIDEBAR */
+  .about-text {
+    font-size: clamp(0.8rem, 3.5vw, 0.85rem);
+    color: #666;
+    line-height: 1.7;
+  }
+
+  .skills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-chip {
+    background: var(--purple-light);
+    color: var(--primary);
+    border-radius: 50px;
+    padding: 5px 15px;
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+    font-weight: 700;
+  }
+
+  .exp-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .exp-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--purple-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .exp-title {
+    font-weight: 700;
+    font-size: clamp(0.8rem, 3.5vw, 0.85rem);
+    color: #222;
+  }
+
+  .exp-company {
+    color: var(--primary);
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+    margin-top: 2px;
+  }
+
+  .exp-date {
+    font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+    color: #bbb;
+    margin-top: 2px;
+  }
+
+  .review-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f3f0ff;
+  }
+
+  .review-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .reviewer-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 5px;
+  }
+
+  .reviewer-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C4B5FD, #8B5CF6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+
+  .reviewer-name {
+    font-weight: 700;
+    font-size: clamp(0.8rem, 3.5vw, 0.85rem);
+    color: #222;
+  }
+
+  .stars-row {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 5px;
+  }
+
+  .stars-row i {
+    color: #FBBF24;
+    font-size: 0.7rem;
+  }
+
+  .review-text {
+    font-size: clamp(0.75rem, 3vw, 0.8rem);
+    color: #777;
+    line-height: 1.5;
+  }
+
+  .social-row {
+    display: flex;
+    gap: 9px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  .social-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--purple-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background .2s, transform .2s;
+  }
+
+  .social-btn:hover {
+    background: var(--card-3);
+    transform: translateY(-2px);
+    color: var(--primary);
+  }
+
+  /* RIGHT COLUMN */
+  .stats-bar {
+    background: rgb(205, 179, 244);
+    border-radius: var(--radius);
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    box-shadow: 0 8px 28px rgba(108, 99, 255, .35);
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-weight: 900;
+    font-size: clamp(1.2rem, 5vw, 1.65rem);
+    color: #4123d7;
+    line-height: 1;
+    letter-spacing: -0.5px;
+  }
+
+  .stat-label {
+    font-size: clamp(0.65rem, 2.5vw, 0.73rem);
+    color: rgba(94, 86, 198, 0.85);
+    margin-top: 4px;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 44px;
+    background: rgba(255, 255, 255, .22);
+  }
+
+  .ach-avail-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  @media (max-width: 640px) {
+    .ach-avail-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ach-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: clamp(0.8rem, 3.5vw, 0.9rem);
+    font-weight: 700;
+    color: #222;
+  }
+
+  .ach-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .ach-icon.gold {
+    background: #FEF9C3;
+    color: #CA8A04;
+  }
+
+  .ach-icon.orange {
+    background: #FFEDD5;
+    color: #EA580C;
+  }
+
+  .ach-icon.green {
+    background: #DCFCE7;
+    color: #16A34A;
+  }
+
+  .avail-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    font-size: clamp(0.8rem, 3.5vw, 0.9rem);
+    font-weight: 600;
+    color: #333;
+  }
+
+  .avail-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .avail-dot.green {
+    background: #DCFCE7;
+    color: #16A34A;
+  }
+
+  .avail-dot.purple {
+    background: var(--purple-light);
+    color: var(--primary);
+  }
+
+  .avail-dot.blue {
+    background: #DBEAFE;
+    color: #2563EB;
+  }
+
+  .btn-hire {
+    background: linear-gradient(135deg, var(--btn-g1), var(--btn-g2));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 26px;
+    font-weight: 700;
+    font-size: clamp(0.8rem, 4vw, 0.9rem);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(108, 99, 255, .35);
+    transition: transform .2s, box-shadow .2s;
+  }
+
+  .hire-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Featured Case Study */
+  .featured-card {
+    background: var(--purple-light);
+    border-radius: 16px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .featured-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, .15);
+  }
+
+  .featured-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .featured-body {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .featured-name {
+    font-weight: 800;
+    font-size: clamp(1rem, 4vw, 1.1rem);
+    margin-bottom: 3px;
+  }
+
+  .featured-sub {
+    font-size: clamp(0.7rem, 3vw, 0.78rem);
+    color: #888;
+    margin-bottom: 10px;
+  }
+
+  .featured-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .featured-tag {
+    background: #fff;
+    color: var(--primary);
+    border: 1.5px solid #DDD6FE;
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-size: clamp(0.7rem, 3vw, 0.77rem);
+    font-weight: 700;
+  }
+
+  .btn-view-case {
+    background: linear-gradient(135deg, var(--btn-g1), var(--btn-g2));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 9px 22px;
+    font-weight: 700;
+    font-size: clamp(0.75rem, 3vw, 0.83rem);
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 14px rgba(108, 99, 255, .3);
+  }
+
+  .featured-illus {
+    width: 280px;
+    height: 280px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .featured-illus img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .featured-illus {
+      display: none;
+    }
+  }
+
+  /* Portfolio Grid */
+  .portfolio-header-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .portfolio-label {
+    font-weight: 800;
+    font-size: clamp(0.9rem, 4vw, 1rem);
+    margin-right: 4px;
+    color: #111;
+  }
+
+  .filter-btn {
+    border: none;
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-weight: 600;
+    font-size: clamp(0.7rem, 3vw, 0.82rem);
+    cursor: pointer;
+    background: var(--purple-light);
+    color: #666;
+    transition: .2s;
+  }
+
+  .filter-btn.active {
+    background: linear-gradient(135deg, var(--btn-g1), var(--btn-g2));
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(108, 99, 255, .3);
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .portfolio-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .portfolio-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .portfolio-item {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    background: #fff;
+    transition: transform .25s ease, box-shadow .25s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .portfolio-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .port-img {
+    height: 180px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: var(--purple-light);
+  }
+
+  .port-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s;
+  }
+
+  .portfolio-item:hover .port-img img {
+    transform: scale(1.04);
+  }
+
+  .port-img i {
+    font-size: 2.4rem;
+    color: rgba(124, 58, 237, .25);
+  }
+
+  .port-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(90, 50, 200, .18) 100%);
+    pointer-events: none;
+  }
+
+  .port-label {
+    background: linear-gradient(135deg, var(--btn-g1), var(--btn-g2));
+    color: #fff;
+    font-weight: 700;
+    font-size: clamp(0.75rem, 3vw, 0.82rem);
+    padding: 10px 12px;
+    text-align: center;
+    letter-spacing: 0.01em;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+  <div class="container">
+
+    <div class="breadcrumb-bar">
+      <a href="{% url 'home' %}">Explore</a>
+      <span class="sep">/</span>
+      <span>Designer Profile</span>
+    </div>
+
+    <!-- HEADER CARD -->
+    <div class="profile-header">
+      <div class="profile-avatar-wrap">
+        {% if designer.profile_image %}
+        <img src="{{ designer.profile_image.url }}" alt="{{ designer.name }}">
+        {% else %}
+        {{ designer.name|slice:":1"|upper }}
+        {% endif %}
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">{{ designer.name|default:"Emma Williams" }}</div>
+        <div class="profile-role">{{ designer.role|default:"UI/UX Designer" }}</div>
+        <div class="profile-meta">
+          <div class="meta-stars">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <span class="review-count">{{ designer.projects_count|default:"120" }} Reviews</span>
+          </div>
+          <div class="meta-item">
+            <i class="bi bi-briefcase-fill"></i>
+            {{ designer.years_experience|default:"5" }}+ Years Experience
+          </div>
+          <div class="meta-item">
+            <i class="bi bi-geo-alt-fill"></i>
+            {{ designer.location|default:"San Francisco, CA" }}
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="#" class="btn-contact">Contact</a>
+          <button class="btn-icon"><i class="bi bi-envelope-fill"></i></button>
+        </div>
+      </div>
+      <div class="success-box">
+        <div class="success-check"><i class="bi bi-check2"></i></div>
+        <div class="success-pct">99%</div>
+        <div class="success-label">Success Rate</div>
+        <div class="success-sub">
+          <i class="bi bi-heart-fill"></i>
+          {{ designer.rating|default:"4.9" }} / {{ designer.projects_count|default:"49" }} Projects
+        </div>
+      </div>
+    </div>
+
+    <div class="main-layout">
+
+      <!-- LEFT SIDEBAR -->
+      <div class="left-col">
+        <div class="card">
+
+          {% if designer.bio %}
+          <div style="margin-bottom: 28px;">
+            <div class="card-heading"><i class="bi bi-person-circle"></i> About Me</div>
+            <p class="about-text">{{ designer.bio|linebreaksbr }}</p>
+          </div>
+          {% endif %}
+
+          {% if designer.education %}
+          <div style="margin-bottom: 28px;">
+            <div class="card-heading"><i class="bi bi-mortarboard-fill"></i> Education</div>
+            <p class="about-text">{{ designer.education|linebreaksbr }}</p>
+          </div>
+          {% endif %}
+
+          {% if designer.skills %}
+          <div style="margin-bottom: 28px;">
+            <div class="card-heading"><i class="bi bi-code-slash"></i> Skills</div>
+            <div class="skills-wrap">
+              {% for skill in designer.skills.split|slice:":10" %}
+              <span class="skill-chip">{{ skill|title }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if designer.experience_list %}
+          <div style="margin-bottom: 28px;">
+            <div class="card-heading"><i class="bi bi-briefcase-fill"></i> Experience</div>
+            {% for exp in designer.experience_list %}
+            <div class="exp-item">
+              <div class="exp-icon"><i class="bi bi-building"></i></div>
+              <div>
+                <div class="exp-title">{{ exp.title }}</div>
+                <div class="exp-company">{{ exp.company }}</div>
+                <div class="exp-date">{{ exp.period }}</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- Reviews -->
+          <div style="margin-bottom: 28px;">
+            <div class="card-heading"><i class="bi bi-chat-dots-fill"></i> Reviews</div>
+            <div class="review-item">
+              <div class="reviewer-row">
+                <div class="reviewer-avatar">J</div>
+                <div class="reviewer-name">John Smith</div>
+              </div>
+              <div class="stars-row">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <div class="review-text">Amazing work! The dashboard redesign is super intuitive.</div>
+            </div>
+            <div class="review-item" style="margin-bottom: 0; padding-bottom: 0;">
+              <div class="reviewer-row">
+                <div class="reviewer-avatar" style="background:linear-gradient(135deg,#F9A8D4,#EC4899);">S</div>
+                <div class="reviewer-name">Sarah Lee</div>
+              </div>
+              <div class="stars-row">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <div class="review-text">Clean and modern. Exactly what we needed.</div>
+            </div>
+          </div>
+
+          <!-- Social -->
+          <div>
+            <div class="card-heading"><i class="bi bi-share-fill"></i> Social</div>
+            <div class="social-row">
+              <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="right-col">
+
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-num">{{ designer.projects_count|default:"120" }}+</div>
+            <div class="stat-label">Projects completed</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">48K+</div>
+            <div class="stat-label">Problems saved</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">15+</div>
+            <div class="stat-label">Worked with companies</div>
+          </div>
+        </div>
+
+        <div class="ach-avail-row">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-heading"><i class="bi bi-trophy-fill"></i> Achievements</div>
+            <div class="ach-item"><div class="ach-icon gold"><i class="bi bi-trophy-fill"></i></div>Top Designer Award</div>
+            <div class="ach-item"><div class="ach-icon orange"><i class="bi bi-fire"></i></div>Completed 25 Challenges</div>
+            <div class="ach-item"><div class="ach-icon green"><i class="bi bi-patch-check-fill"></i></div>AI Verified</div>
+          </div>
+          <div class="card" style="margin-bottom:0;">
+            <div class="avail-item"><div class="avail-dot green"><i class="bi bi-check2"></i></div>Available for Hire</div>
+            <div class="avail-item"><div class="avail-dot purple"><i class="bi bi-lightning-charge-fill"></i></div>Quick Response</div>
+            <div class="avail-item"><div class="avail-dot blue"><i class="bi bi-calendar-check-fill"></i></div>Open for Freelance/Full Time</div>
+            <div class="hire-row">
+              <button class="btn-hire"><i class="bi bi-person-check-fill"></i> Hire Me</button>
+              <button class="btn-icon"><i class="bi bi-envelope-fill"></i></button>
+            </div>
+          </div>
+        </div>
+
+        {% if designer.featured_case %}
+        <div class="card">
+          <div class="card-heading" style="font-size:1.1rem;">
+            Featured <span style="color:var(--primary);">Case Study</span>
+          </div>
+          <div class="featured-card">
+            <div class="featured-thumb">
+              {% if designer.featured_case.image %}
+              <img src="{{ designer.featured_case.image.url }}" alt="{{ designer.featured_case.title }}">
+              {% else %}
+              <div class="featured-thumb-empty"><i class="bi bi-image"></i></div>
+              {% endif %}
+            </div>
+            <div class="featured-body">
+              <div class="featured-name">{{ designer.featured_case.title }}</div>
+              <div class="featured-sub">
+                {% for tag in designer.featured_case.tags.all|slice:":2" %}
+                {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </div>
+              <div class="featured-tags">
+                {% for tag in designer.featured_case.tags.all|slice:":4" %}
+                <span class="featured-tag">{{ tag.name }}</span>
+                {% endfor %}
+              </div>
+              <a href="{% url 'case_detail' designer.featured_case.id %}" class="btn-view-case">View Case Study</a>
+            </div>
+            {% if designer.featured_case.image %}
+            <div class="featured-illus">
+              <img src="{{ designer.featured_case.image.url }}" alt="{{ designer.featured_case.title }}">
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if portfolio_cases %}
+        <div class="card">
+          <div class="portfolio-header-row">
+            <span class="portfolio-label">Portfolio</span>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="mobile">Mobile App</button>
+            <button class="filter-btn" data-filter="casestudy">UI/UX Case Study</button>
+            <button class="filter-btn" data-filter="web">Website Design</button>
+          </div>
+          <div class="portfolio-grid" id="portfolioGrid">
+            {% for case in portfolio_cases %}
+            <a href="{% url 'case_detail' case.id %}" class="portfolio-item"
+              data-category="{% if 'Mobile' in case.title or 'App' in case.title %}mobile{% elif 'Web' in case.title or 'Website' in case.title or 'Landing' in case.title %}web{% else %}all{% endif %}">
+              <div class="port-img">
+                {% if case.image %}
+                <img src="{{ case.image.url }}" alt="{{ case.title }}">
+                {% else %}
+                <i class="bi bi-image"></i>
+                {% endif %}
+              </div>
+              <div class="port-label">{{ case.title }}</div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const portItems = document.querySelectorAll('.portfolio-item');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      portItems.forEach(item => {
+        item.style.display = (f === 'all' || item.dataset.category === f) ? 'block' : 'none';
+      });
+    });
+  });
+</script>
+{% endblock %}

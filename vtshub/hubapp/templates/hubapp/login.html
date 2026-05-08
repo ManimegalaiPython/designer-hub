@@ -1,0 +1,522 @@
+{% load static %}
+
+{% block extra_head %}
+<style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'DM sans', sans-serif;
+  }
+
+  .auth-wrap {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* LEFT */
+  .auth-left {
+    width: 46%;
+    background: linear-gradient(150deg, #e2e8ff 0%, #ddd8f8 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .auth-brand {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    font-size: 0.95rem;
+    color: #444;
+  }
+
+  .auth-brand strong {
+    color: #6C3FEE;
+    font-weight: 900;
+    font-size: 1rem;
+  }
+
+  .auth-left img {
+    width: 88%;
+    max-width: 420px;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* RIGHT */
+  .auth-right {
+    flex: 1;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 48px;
+  }
+
+  .auth-form-box {
+    width: 100%;
+    max-width: 370px;
+  }
+
+  .auth-form-box h1 {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #111;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .sub {
+    text-align: center;
+    color: #666;
+    font-size: 0.93rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+  }
+
+  .auth-form-box h2 {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 26px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 7px;
+  }
+
+  input[type=email],
+  input[type=password] {
+    width: 100%;
+    border: 1.5px solid #d8dce8;
+    border-radius: 6px;
+    padding: 12px 15px;
+    font-size: 0.92rem;
+    color: #222;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus {
+    border-color: #7C3AED;
+  }
+
+  input::placeholder {
+    color: #bbb;
+    font-size: 0.9rem;
+  }
+
+  .forgot-row {
+    text-align: right;
+    margin-top: -12px;
+    margin-bottom: 22px;
+  }
+
+  .forgot-row a {
+    font-size: 0.85rem;
+    color: #7C3AED;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .forgot-row a:hover {
+    text-decoration: underline;
+  }
+
+  .btn-auth {
+    display: block;
+    margin: 0 auto;
+    background: #7C3AED;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 13px 52px;
+    font-size: 0.97rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-auth:hover {
+    background: #6D28D9;
+  }
+
+  .auth-bottom {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.87rem;
+    color: #777;
+  }
+
+  .auth-bottom a {
+    color: #7C3AED;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .auth-bottom a:hover {
+    text-decoration: underline;
+  }
+
+  .msg-error {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 7px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.87rem;
+    color: #B91C1C;
+  }
+
+  .msg-success {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 7px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.87rem;
+    color: #166534;
+  }
+
+  /* FORGOT PASSWORD MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: popIn 0.22s ease;
+  }
+
+  @keyframes popIn {
+    from {
+      transform: scale(0.92);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #999;
+    background: none;
+    border: none;
+    line-height: 1;
+  }
+
+  .modal-close:hover {
+    color: #333;
+  }
+
+  .modal-box h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 8px;
+  }
+
+  .modal-box p.modal-desc {
+    font-size: 0.88rem;
+    color: #666;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  .modal-box label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 7px;
+  }
+
+  .modal-box input[type=email] {
+    width: 100%;
+    border: 1.5px solid #d8dce8;
+    border-radius: 6px;
+    padding: 11px 14px;
+    font-size: 0.91rem;
+    color: #222;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 18px;
+  }
+
+  .modal-box input[type=email]:focus {
+    border-color: #7C3AED;
+  }
+
+  .modal-btn {
+    width: 100%;
+    background: #7C3AED;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .modal-btn:hover {
+    background: #6D28D9;
+  }
+
+  .modal-btn:disabled {
+    background: #b39ddb;
+    cursor: not-allowed;
+  }
+
+  .modal-msg {
+    font-size: 0.86rem;
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  .modal-msg.ok {
+    color: #166534;
+  }
+
+  .modal-msg.err {
+    color: #B91C1C;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .auth-left {
+      width: 42%;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .auth-wrap {
+      flex-direction: column;
+    }
+
+    .auth-left {
+      width: 100%;
+      min-height: 240px;
+      padding: 50px 20px 24px;
+    }
+
+    .auth-left img {
+      width: 70%;
+      max-width: 280px;
+    }
+
+    .auth-brand {
+      top: 16px;
+      left: 16px;
+    }
+
+    .auth-right {
+      padding: 40px 24px 50px;
+    }
+
+    .auth-form-box h1 {
+      font-size: 1.9rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .auth-form-box h1 {
+      font-size: 1.65rem;
+    }
+
+    .btn-auth {
+      padding: 12px 36px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="auth-brand"><strong>VTS</strong> Designer Hub</div>
+    <img src="{% static 'hubapp/images/image 87.png' %}" alt="Login Illustration">
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <div class="auth-form-box">
+
+      <h1>Welcome Back!</h1>
+      <p class="sub">Login to continue your journey.</p>
+      <h2>Login</h2>
+
+      {% if messages %}
+      {% for message in messages %}
+      <div class="{% if message.tags == 'error' %}msg-error{% else %}msg-success{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="Enter Your Email" required>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter Your Password" required>
+          <input type="hidden" name="csrf_test" value="{{ csrf_token }}">
+        </div>
+
+        <div class="forgot-row">
+          <a href="{% url 'password_reset' %}">Forget password?</a>
+        </div>
+
+        <button type="submit" class="btn-auth">Login</button>
+      </form>
+
+      <div class="auth-bottom">
+        Don't have an account? <a href="{% url 'signup' %}">Create</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-overlay" id="forgotModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeForgot()">&#x2715;</button>
+    <h3>Reset Password</h3>
+    <p class="modal-desc">Enter your registered email and we'll send you a password reset link.</p>
+
+    <label>Email Address</label>
+    <input type="email" id="resetEmail" placeholder="Enter Your Email">
+
+    <button class="modal-btn" id="resetBtn" onclick="sendReset()">Send Reset Link</button>
+    <p class="modal-msg" id="resetMsg"></p>
+  </div>
+</div>
+
+<script>
+  var RESET_URL = "{% url 'password_reset' %}";
+  var CSRF = "{{ csrf_token }}";
+
+  function openForgot() {
+    document.getElementById('forgotModal').classList.add('active');
+    document.getElementById('resetEmail').value = '';
+    document.getElementById('resetMsg').textContent = '';
+    document.getElementById('resetMsg').className = 'modal-msg';
+    document.getElementById('resetBtn').disabled = false;
+    document.getElementById('resetBtn').textContent = 'Send Reset Link';
+    setTimeout(function () { document.getElementById('resetEmail').focus(); }, 100);
+  }
+
+  function closeForgot() {
+    document.getElementById('forgotModal').classList.remove('active');
+  }
+
+  // Click outside to close
+  document.getElementById('forgotModal').addEventListener('click', function (e) {
+    if (e.target === this) closeForgot();
+  });
+
+  // ESC key to close
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeForgot();
+  });
+
+  function sendReset() {
+    var email = document.getElementById('resetEmail').value.trim();
+    var msg = document.getElementById('resetMsg');
+    var btn = document.getElementById('resetBtn');
+
+    if (!email) {
+      msg.className = 'modal-msg err';
+      msg.textContent = 'Please enter your email address.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.className = 'modal-msg err';
+      msg.textContent = 'Please enter a valid email address.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    msg.textContent = '';
+
+    fetch(RESET_URL, {
+      method: 'POST',
+      credentials: 'same-origin',          // ← important: send cookies
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': CSRF
+      },
+      body: new URLSearchParams({ email: email })
+    })
+      .then(response => {
+        if (response.ok) {
+          msg.className = 'modal-msg ok';
+          msg.textContent = '✓ If this email is registered, a reset link has been sent. Check your inbox/spam.';
+          btn.textContent = 'Sent ✓';
+        } else if (response.status === 403) {
+          throw new Error('CSRF token error. Please refresh the page and try again.');
+        } else {
+          throw new Error('Server error. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+        msg.className = 'modal-msg err';
+        msg.textContent = error.message || 'Something went wrong. Please try again.';
+        btn.disabled = false;
+        btn.textContent = 'Send Reset Link';
+      });
+  }
+</script>
+{% endblock %}

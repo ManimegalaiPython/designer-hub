@@ -1,0 +1,691 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- =========================
+    GOOGLE FONTS
+========================= -->
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
+
+<link href="https://fonts.cdnfonts.com/css/sansation" rel="stylesheet">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'DM Sans', sans-serif;
+        background: #ede7fb;
+        color: #333;
+        overflow-x: hidden;
+    }
+
+    /* =========================
+    TYPOGRAPHY
+========================= */
+
+    h1,
+    h2,
+    h3,
+    .project-title,
+    .ai-card-title,
+    .focus-title,
+    .impact-title {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .subtitle,
+    .trust-title {
+        font-family: 'Sansation', sans-serif;
+    }
+
+    /* =========================
+    PAGE WRAPPER
+========================= */
+
+    .page-wrapper {
+        max-width: 1400px;
+        margin: auto;
+        padding: 30px 24px 60px;
+    }
+
+    .breadcrumb {
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 14px;
+    }
+
+    h1 {
+        font-size: 54px;
+        font-weight: 800;
+        color: #5a3fa0;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        font-size: 24px;
+        color: #666;
+        margin-bottom: 30px;
+        line-height: 1.5;
+    }
+
+    /* =========================
+    TWO COLUMN
+========================= */
+
+    .two-col {
+        display: flex;
+        gap: 22px;
+        align-items: flex-start;
+    }
+
+    .left-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .right-col {
+        width: 320px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    /* =========================
+    COMMON CARDS
+========================= */
+
+    .project-card,
+    .form-card,
+    .improvements-card,
+    .ai-card,
+    .trust-card {
+        background: #efe7ff;
+        border: 1px solid #d9ccff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    /* =========================
+    PROJECT CARD
+========================= */
+
+    .project-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .project-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 14px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .project-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 6px;
+    }
+
+    .project-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 14px;
+    }
+
+    .version-badge {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #5a3fa0;
+        font-weight: 600;
+    }
+
+    .version-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #27ae60;
+    }
+
+    /* =========================
+    FORM
+========================= */
+
+    .form-label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #222;
+    }
+
+    .figma-input-row {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 12px 14px;
+    }
+
+    .figma-input-row input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 15px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .edit-icon {
+        color: #7c4dff;
+        font-size: 18px;
+    }
+
+    .desc-textarea {
+        width: 100%;
+        height: 120px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        background: #fff;
+        padding: 14px;
+        resize: none;
+        outline: none;
+        font-size: 15px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* =========================
+    IMPROVEMENTS
+========================= */
+
+    .improvements-label {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .improvement-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 14px;
+        font-size: 15px;
+    }
+
+    .imp-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #7c4dff;
+        margin-top: 8px;
+    }
+
+    /* =========================
+    BUTTONS
+========================= */
+    .bottom-btns {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    .btn-update {
+        background: #7c4dff;
+        color: white;
+        border: none;
+        border-radius: 40px;
+        padding: 10px 24px;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+    }
+
+    .btn-draft {
+        background: #e2e2e2;
+        color: #333;
+        border: none;
+        border-radius: 40px;
+        padding: 10px 24px;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .submission-container {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        width: 500px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+        margin-top: 30px;
+    }
+
+    button {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-update {
+        background: #7c4dff;
+        color: white;
+    }
+
+    .btn-draft {
+        background: #fefcfc;
+        color: #333;
+    }
+
+    /* =========================
+    AI CARD
+========================= */
+
+    .ai-card-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .score-circle-wrap {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 20px;
+    }
+
+    .score-circle {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: conic-gradient(#8b5cf6 0% 91%,
+                #d8c9ff 91% 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .score-circle::before {
+        content: '';
+        position: absolute;
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #fff;
+    }
+
+    .score-inner {
+        position: relative;
+        z-index: 2;
+        font-size: 38px;
+        font-weight: 800;
+        color: #a020f0;
+    }
+
+    .score-label strong {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .score-label span {
+        display: block;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .ai-divider {
+        border: none;
+        border-top: 1px solid #dacfff;
+        margin: 18px 0;
+    }
+
+    .focus-title,
+    .impact-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .focus-text {
+        font-size: 15px;
+        color: #555;
+        line-height: 1.7;
+    }
+
+    .impact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+        font-size: 15px;
+    }
+
+    .impact-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #7c4dff;
+        margin-top: 8px;
+    }
+
+    /* =========================
+    TRUST CARD
+========================= */
+
+    .trust-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #6a3fcf;
+        margin-bottom: 16px;
+    }
+
+    .trust-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        font-size: 15px;
+    }
+
+    .trust-icon {
+        color: #7c4dff;
+        font-size: 16px;
+    }
+
+    /* =========================
+    RESPONSIVE
+========================= */
+
+    @media(max-width:1024px) {
+
+        .two-col {
+            flex-direction: column;
+        }
+
+        .right-col {
+            width: 100%;
+        }
+
+    }
+
+    @media(max-width:768px) {
+
+        .page-wrapper {
+            padding: 24px 16px 50px;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+        }
+
+        .bottom-btns {
+            flex-direction: column;
+        }
+
+        .score-circle-wrap {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .project-card {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="breadcrumb">
+        Marketplace / Redesign / Update Submission
+    </div>
+
+    <h1>Update your Submission</h1>
+
+    <p class="subtitle">
+        Make adjustments based on AI feedback and update your solution.
+    </p>
+
+    <div class="two-col">
+
+        <!-- LEFT COLUMN -->
+
+        <div class="left-col">
+
+            <!-- PROJECT CARD -->
+
+            <div class="project-card">
+
+                <div class="project-icon">🎵</div>
+
+                <div class="project-info">
+
+                    <div class="project-title">
+                        Redesign Onboarding Flow for a Fintech App
+                    </div>
+
+                    <div class="project-meta">
+
+                        <div class="version-badge">
+                            <div class="version-dot"></div>
+                            Version 1
+                        </div>
+
+                        <span>Editing Version 2 (Updated)</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FIGMA -->
+
+            <div class="form-card">
+
+                <label class="form-label">Figma Link</label>
+
+                <div class="figma-input-row">
+
+                    <input type="text" placeholder="https://www.figma.com/design/VGETuYTJDZ" />
+
+                    <span class="edit-icon">✏️</span>
+
+                </div>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-card">
+
+                <label class="form-label">Description</label>
+
+                <textarea class="desc-textarea"
+                    placeholder="Briefly explain what changes you made to improve the design."></textarea>
+
+            </div>
+
+            <!-- IMPROVEMENTS -->
+
+            <div class="improvements-card">
+
+                <div class="improvements-label">
+                    What did you Improve?
+                </div>
+
+                <div class="improvement-item">
+                    <div class="imp-dot"></div>
+                    Reduced onboarding screens
+                </div>
+
+                <div class="improvement-item">
+                    <div class="imp-dot"></div>
+                    Improved contrast
+                </div>
+
+                <div class="improvement-item">
+                    <div class="imp-dot"></div>
+                    Simplified user flow
+                </div>
+
+                <div class="improvement-item">
+                    <div class="imp-dot"></div>
+                    Added progress indicators
+                </div>
+
+            </div>
+
+            <!-- BUTTONS -->
+
+            <div class="bottom-btns">
+                <a href="{% url 'submission_updated_success' problem.pk %}" class="btn-update" id="updateSubmitLink">
+                    Update Submission
+                </a>
+                <button type="button" class="btn-draft" id="saveDraftBtn">Save as Draft</button>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+
+        <div class="right-col">
+
+            <!-- AI CARD -->
+
+            <div class="ai-card">
+
+                <div class="ai-card-title">
+                    AI Feedback summary
+                </div>
+
+                <div class="score-circle-wrap">
+
+                    <div class="score-circle">
+                        <div class="score-inner">91</div>
+                    </div>
+
+                    <div class="score-label">
+                        <strong>Score : 91</strong>
+                        <span>Overall</span>
+                        <span>Good</span>
+                    </div>
+
+                </div>
+
+                <hr class="ai-divider">
+
+                <div class="focus-title">
+                    Focus Areas
+                </div>
+
+                <div class="focus-text">
+                    Enhanced key areas to create a smoother and more user-friendly experience.
+                </div>
+
+                <hr class="ai-divider">
+
+                <div class="impact-title">
+                    Impact Preview
+                </div>
+
+                <div class="impact-item">
+                    <div class="impact-dot"></div>
+                    Faster Onboarding
+                </div>
+
+                <div class="impact-item">
+                    <div class="impact-dot"></div>
+                    Better readability
+                </div>
+
+                <div class="impact-item">
+                    <div class="impact-dot"></div>
+                    Reduced user drop-offs
+                </div>
+
+            </div>
+
+            <!-- TRUST CARD -->
+
+            <div class="trust-card">
+
+                <div class="trust-title">
+                    Trust Element
+                </div>
+
+                <div class="trust-item">
+                    <span class="trust-icon">✦</span>
+                    AI Powered Analysis
+                </div>
+
+                <div class="trust-item">
+                    <span class="trust-icon">🎯</span>
+                    Based on UX Best Practices
+                </div>
+
+                <div class="trust-item">
+                    <span class="trust-icon">🔷</span>
+                    Trained on 10K+ designs
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1059 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+<!-- Google Fonts -->
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap"
+  rel="stylesheet" />
+
+<style>
+  :root {
+    --primary: #7c3aed;
+    --primary-light: #a855f7;
+    --primary-pale: #f5f0ff;
+    --accent: #10b981;
+    --accent2: #f59e0b;
+    --danger: #ef4444;
+    --surface: #ffffff;
+    --bg: #f8f7ff;
+    --border: #e8e0fa;
+    --text: #1e1b2e;
+    --muted: #6b7280;
+    --radius: 14px;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f0ff;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Page wrapper ── */
+  .page-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+
+  /* ── Breadcrumb / back link ── */
+  .back-link {
+    font-size: 1rem;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    transition: color .2s;
+    margin-bottom: 1rem;
+  }
+
+  .back-link:hover {
+    color: var(--primary);
+  }
+
+  /* ── Page heading ── */
+  .page-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: .25rem;
+  }
+
+  .page-subtitle {
+    font-size: .86rem;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+  }
+
+  /* ── Problem card ── */
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .problem-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .problem-card h5 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  .problem-card small {
+    color: var(--muted);
+    font-size:1rem;
+  }
+
+  /* ── Two-column layout ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+  }
+
+  @media(max-width:900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Card shell ── */
+  .card-shell {
+    background: #d9d8db;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-shell-title {
+    font-family:  sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: .85rem;
+    color: var(--text);
+  }
+
+  /* ── UX Analysis mockup ── */
+  .ux-analysis-wrap {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 1.25rem;
+  }
+
+  @media(max-width:640px) {
+    .ux-analysis-wrap {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Phone mockup */
+  .phone-wrap {
+    background: linear-gradient(160deg, #2d1b6e, #4c1d95);
+    border-radius: 24px;
+    padding: 1.2rem .9rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phone-wrap::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 120px;
+    height: 120px;
+    background: rgba(167, 139, 250, .15);
+    border-radius: 50%;
+  }
+
+  .phone-statusbar {
+    display: flex;
+    justify-content: space-between;
+    font-size: .68rem;
+    color: rgba(255, 255, 255, .7);
+    margin-bottom: .75rem;
+  }
+
+  .phone-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: rgba(255, 255, 255, .08);
+    border-radius: 8px;
+    padding: .45rem .6rem;
+    margin-bottom: .9rem;
+  }
+
+  .phone-header-icon {
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .95rem;
+    color: #fff;
+  }
+
+  .phone-header-label {
+    font-size: .78rem;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .phone-header-chevron {
+    margin-left: auto;
+    color: rgba(255, 255, 255, .5);
+    font-size: .75rem;
+  }
+
+  .score-circle-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: .75rem;
+  }
+
+  .score-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: conic-gradient(#a855f7 0% 84%, rgba(255, 255, 255, .15) 84% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .score-circle-inner {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #3b1b8a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .score-circle-num {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .score-circle-label {
+    font-size: .52rem;
+    color: rgba(255, 255, 255, .6);
+    text-align: center;
+  }
+
+  .phone-tagline {
+    font-size: .72rem;
+    color: rgba(255, 255, 255, .7);
+    text-align: center;
+    margin-bottom: .85rem;
+  }
+
+  .phone-suggestions {
+    margin-bottom: .75rem;
+  }
+
+  .phone-sug-title {
+    font-size: .68rem;
+    color: rgba(255, 255, 255, .5);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: .4rem;
+  }
+
+  .phone-sug-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .4rem;
+    font-size: .7rem;
+    color: rgba(255, 255, 255, .85);
+    margin-bottom: .3rem;
+  }
+
+  .phone-sug-item i {
+    font-size: .7rem;
+    color: #10b981;
+    margin-top: .1rem;
+    flex-shrink: 0;
+  }
+
+  .phone-positive {
+    margin-bottom: .9rem;
+  }
+
+  .phone-pos-title {
+    font-size: .68rem;
+    color: rgba(255, 255, 255, .5);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: .4rem;
+  }
+
+  .phone-pos-item {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .7rem;
+    color: rgba(255, 255, 255, .85);
+    margin-bottom: .25rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-orange {
+    background: #f97316;
+  }
+
+  .dot-yellow {
+    background: #eab308;
+  }
+
+  .phone-cta {
+    background: linear-gradient(90deg, #7c3aed, #a855f7);
+    border-radius: 8px;
+    padding: .55rem;
+    text-align: center;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: .02em;
+  }
+
+  /* UX criteria */
+  .ux-criteria {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+  }
+
+  .ux-criteria-label {
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: .15rem;
+  }
+
+  .ux-criteria-desc {
+    font-size: .83rem;
+    color: var(--muted);
+  }
+
+  /* Suggestions */
+  .sug-title {
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: .4rem;
+  }
+
+  .sug-subtitle {
+    font-size: .88rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: .6rem;
+  }
+
+  .sug-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sug-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: .5rem;
+    font-size: .85rem;
+    color: var(--muted);
+    padding: .25rem 0;
+  }
+
+  .sug-list li::before {
+    content: '•';
+    color: var(--primary);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Progress bars */
+  .metric-row {
+    margin-bottom: .75rem;
+  }
+
+  .metric-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .88rem;
+    margin-bottom: .35rem;
+    font-weight: 500;
+  }
+
+  .metric-label span:last-child {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .metric-bar {
+    height: 8px;
+    border-radius: 99px;
+    background: #e5e7eb;
+    overflow: hidden;
+  }
+
+  .metric-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #7c3aed, #c084fc, #67e8f9);
+    transition: width .8s ease;
+  }
+
+  .metric-fill-warn {
+    background: linear-gradient(90deg, #f97316, #fbbf24, #a3e635);
+  }
+
+  /* Right column */
+  .health-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 600;
+    border-radius: 99px;
+    padding: .3rem .9rem;
+    margin-bottom: .75rem;
+  }
+
+  .overall-score-num {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .overall-score-num span {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .overall-score-desc {
+    font-size: .83rem;
+    color: var(--muted);
+    margin-top: .2rem;
+  }
+
+  .quick-summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .qs-title {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: .95rem;
+    margin-bottom: .5rem;
+  }
+
+  .qs-subtitle {
+    font-size: .82rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: .5rem;
+  }
+
+  .qs-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .qs-list li {
+    font-size: .83rem;
+    color: var(--muted);
+    padding: .2rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: .45rem;
+  }
+
+  .qs-list li::before {
+    content: '•';
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .ai-summary-card {
+    background: var(--primary-pale);
+    border: 1px solid #ddd6fe;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .ai-summary-title {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: .95rem;
+    margin-bottom: .35rem;
+  }
+
+  .ai-summary-text {
+    font-size: .83rem;
+    color: var(--muted);
+  }
+
+  /* Action buttons */
+  .btn-download {
+    display: block;
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+    font-size: .9rem;
+    border: none;
+    border-radius: 10px;
+    padding: .65rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: .65rem;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .btn-download:hover {
+    background: #6d28d9;
+    color: #fff;
+  }
+
+  .btn-improve {
+    display: block;
+    width: 100%;
+    background: #fff;
+    color: var(--text);
+    font-weight: 600;
+    font-size: .9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: .6rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+
+  .btn-improve:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  /* Trust */
+  .trust-title {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--primary);
+    margin-bottom: .55rem;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .82rem;
+    color: var(--muted);
+    margin-bottom: .4rem;
+  }
+
+  .trust-icon {
+    font-size: .95rem;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: .75rem 0;
+  }
+
+  /* Loading overlay */
+  #loadingOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    transition: opacity .4s;
+  }
+
+  .loader-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #fff;
+    animation: pulse 1.2s ease-in-out infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.12);
+    }
+  }
+
+  .loader-text {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--primary);
+    margin-bottom: .35rem;
+  }
+
+  .loader-sub {
+    font-size: .85rem;
+    color: var(--muted);
+  }
+
+  .loader-dots {
+    display: flex;
+    gap: .4rem;
+    margin-top: .75rem;
+  }
+
+  .loader-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary);
+    opacity: .3;
+    animation: dot-bounce .9s ease-in-out infinite;
+  }
+
+  .loader-dots span:nth-child(2) {
+    animation-delay: .15s;
+  }
+
+  .loader-dots span:nth-child(3) {
+    animation-delay: .3s;
+  }
+
+  @keyframes dot-bounce {
+
+    0%,
+    100% {
+      opacity: .3;
+      transform: translateY(0);
+    }
+
+    50% {
+      opacity: 1;
+      transform: translateY(-5px);
+    }
+  }
+
+  /* AI generated section */
+  .ai-generated-section {
+    background: var(--primary-pale);
+    border: 1px solid #ddd6fe;
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+    margin-top: 1rem;
+    display: none;
+  }
+
+  .ai-generated-section.visible {
+    display: block;
+    animation: fadeIn .5s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ai-gen-title {
+    font-family: 'Sora', sans-serif;
+    font-weight: 600;
+    font-size: .95rem;
+    color: var(--primary);
+    margin-bottom: .6rem;
+  }
+
+  .ai-gen-body {
+    font-size: .85rem;
+    color: var(--text);
+    line-height: 1.65;
+    white-space: pre-wrap;
+  }
+
+  @media(max-width:576px) {
+    .page-title {
+      font-size: 1.2rem;
+    }
+
+    .ux-analysis-wrap {
+      grid-template-columns: 1fr;
+    }
+
+    .phone-wrap {
+      min-height: auto;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Loading overlay -->
+<div id="loadingOverlay">
+  <div class="loader-icon"><i class="bi bi-stars"></i></div>
+  <p class="loader-text">Generating AI Feedback…</p>
+  <p class="loader-sub">Analysing usability, accessibility &amp; visual design</p>
+  <div class="loader-dots"><span></span><span></span><span></span></div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- Back link -->
+  <a href="{% url 'problem_detail' problem.pk %}" class="back-link">
+    <i class="bi bi-arrow-left"></i> Back to Problem
+  </a>
+
+  <!-- Heading -->
+  <h1 class="page-title">AI Design Feedback Report</h1>
+  <p class="page-subtitle">Submit your design solution for the problem.</p>
+
+  <!-- Problem banner -->
+  <div class="problem-card">
+    <div class="problem-icon"><i class="bi bi-layers"></i></div>
+    <div>
+      <h5>{{ problem.title }}</h5>
+      <small>{{ problem.company_name }}</small>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="layout">
+
+    <!-- ── LEFT COLUMN ── -->
+    <div>
+
+      <!-- UX Analysis -->
+      <div class="card-shell">
+        <p class="card-shell-title">UX Analysis</p>
+        <div class="ux-analysis-wrap">
+
+          <!-- Phone mockup -->
+          <div class="phone-wrap">
+            <div class="phone-statusbar">
+              <span>9:41</span>
+              <span><i class="bi bi-wifi"></i> <i class="bi bi-battery-half"></i></span>
+            </div>
+            <div class="phone-header">
+              <div class="phone-header-icon"><i class="bi bi-stars"></i></div>
+              <span class="phone-header-label">AI Feedback</span>
+              <i class="bi bi-chevron-down phone-header-chevron"></i>
+            </div>
+            <div class="score-circle-wrap">
+              <div class="score-circle">
+                <div class="score-circle-inner">
+                  <span class="score-circle-num" id="scoreNum">--</span>
+                  <span class="score-circle-label">Score</span>
+                </div>
+              </div>
+            </div>
+            <p class="phone-tagline" id="phoneTagline">Analysing your design…</p>
+            <div class="phone-suggestions">
+              <p class="phone-sug-title">Suggestions</p>
+              <div class="phone-sug-item"><i class="bi bi-check-circle-fill"></i><span>Reduce the number of steps for
+                  better usability</span></div>
+              <div class="phone-sug-item"><i class="bi bi-check-circle-fill"></i><span>Improve text contrast for better
+                  readability</span></div>
+            </div>
+            <div class="phone-positive">
+              <p class="phone-pos-title">Positive Note</p>
+              <div class="phone-pos-item"><span class="dot dot-orange"></span><span>Clean and modern UI design</span>
+              </div>
+              <div class="phone-pos-item"><span class="dot dot-yellow"></span><span>Good use of color consistency</span>
+              </div>
+            </div>
+            <div class="phone-cta">Improve Design</div>
+          </div>
+
+          <!-- UX criteria list -->
+          <div>
+            <div class="ux-criteria" id="uxCriteriaList">
+              <div class="card-shell">
+                <div class="ux-criteria-item">
+                  <p class="ux-criteria-label">Usability</p>
+                  <p class="ux-criteria-desc" id="crit-usability">Clear flow, reduce steps for better experience.</p>
+                </div>
+                <div class="ux-criteria-item">
+                  <p class="ux-criteria-label">Visual Design</p>
+                  <p class="ux-criteria-desc" id="crit-visual">Consistent design, improve spacing and alignment.</p>
+                </div>
+                <div class="ux-criteria-item">
+                  <p class="ux-criteria-label">Accessibility</p>
+                  <p class="ux-criteria-desc" id="crit-access">Improve contrast for better readability.</p>
+                </div>
+                <div class="ux-criteria-item">
+                  <p class="ux-criteria-label">User Flow</p>
+                  <p class="ux-criteria-desc" id="crit-flow">Streamline navigation to minimise user friction.</p>
+                </div>
+              </div>
+
+              <!-- Suggestions -->
+              <div class="card-shell">
+                <p class="sug-title">Suggestions</p>
+                <p class="sug-subtitle">Suggestions for improvement</p>
+                <ul class="sug-list" id="suggestionsList">
+                  <li>Reduce the number of onboarding steps</li>
+                  <li>Improve text contrast for readability</li>
+                  <li>Simplify verification process</li>
+                  <li>Add progress indicators</li>
+                  <li>Use consistent spacing</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- AI-generated extended feedback -->
+            <div class="ai-generated-section" id="aiFeedbackSection">
+              <p class="ai-gen-title"><i class="bi bi-stars me-1"></i>Detailed AI Analysis</p>
+              <p class="ai-gen-body" id="aiFeedbackBody"></p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="card-shell">
+        <div class="metric-row">
+          <div class="metric-label">
+            <span>Visual Hierarchy</span>
+            <span id="metricVH">9 / 10</span>
+          </div>
+          <div class="metric-bar">
+            <div class="metric-fill" id="fillVH" style="width:90%"></div>
+          </div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">
+            <span>Accessibility</span>
+            <span id="metricA11y">7.5 / 10</span>
+          </div>
+          <div class="metric-bar">
+            <div class="metric-fill metric-fill-warn" id="fillA11y" style="width:75%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back link bottom -->
+      <a href="{% url 'problem_detail' problem.pk %}" class="back-link">
+        <i class="bi bi-arrow-left"></i> Back to Solve
+      </a>
+
+    </div>
+
+    <!-- ── RIGHT COLUMN ── -->
+    <div>
+
+      <!-- UX Health Report -->
+      <div class="card-shell">
+        <p class="card-shell-title">UX Health Report</p>
+        <p style="font-size:.82rem;color:var(--muted);margin-bottom:.65rem;">Evaluating usability, visual design,
+          accessibility and user flow.</p>
+        <span class="health-badge" id="healthBadge">Good</span>
+        <hr class="section-divider">
+        <div class="overall-score-num" id="overallScoreDisp">-- <span>/ 100</span></div>
+        <p class="overall-score-desc" id="overallScoreDesc">Strong foundation, needs usability improvements</p>
+      </div>
+
+      <!-- Quick Summary -->
+      <div class="quick-summary-card">
+        <p class="qs-title">Quick Summary</p>
+        <hr class="section-divider">
+        <p class="qs-subtitle">Positive Feedback</p>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:.35rem;">What you did well</p>
+        <ul class="qs-list" id="positiveList">
+          <li>Clean and modern UI design</li>
+          <li>Good use of color consistency</li>
+          <li>Logical flow structure</li>
+          <li>Clear CTA placement</li>
+        </ul>
+      </div>
+
+      <!-- AI Summary -->
+      <div class="ai-summary-card">
+        <p class="ai-summary-title">AI Summary</p>
+        <p class="ai-summary-text" id="aiSummaryText">Good design with scope for UX improvements</p>
+      </div>
+
+      <!-- Action buttons -->
+      <a href="{% url 'refine_solution' problem.pk %}" class="btn-download">
+        <i class="bi bi-download me-1"></i>Download Full Report
+      </a>
+      <a href="{% url 'update_submission' problem.pk %}" class="btn-improve">
+        Improve
+      </a>
+
+      <!-- Trust -->
+      <div class="card-shell" style="margin-bottom:0;">
+        <p class="trust-title">Trust Element</p>
+        <div class="trust-item"><span class="trust-icon" style="color:var(--primary);">✦</span> AI Powered Analysis
+        </div>
+        <div class="trust-item"><i class="bi bi-graph-up-arrow trust-icon" style="color:var(--accent);"></i> Based on UX
+          Best Practices</div>
+        <div class="trust-item"><i class="bi bi-globe trust-icon" style="color:#3b82f6;"></i> Trained on 10K+ designs
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /layout -->
+</div><!-- /page-wrap -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  (function () {
+    "use strict";
+
+    const FEEDBACK = {
+      score: 84,
+      health: "Good",
+      scoreDesc: "Strong foundation, needs usability improvements",
+      usability: "Clear flow, reduce steps for better experience.",
+      visual: "Consistent design, improve spacing and alignment.",
+      access: "Improve contrast for better readability.",
+      flow: "Streamline navigation to minimise user friction.",
+      suggestions: [
+        "Reduce the number of onboarding steps",
+        "Improve text contrast for readability",
+        "Simplify verification process",
+        "Add progress indicators",
+        "Use consistent spacing"
+      ],
+      positives: [
+        "Clean and modern UI design",
+        "Good use of color consistency",
+        "Logical flow structure",
+        "Clear CTA placement"
+      ],
+      vh: 9, a11y: 7.5,
+      aiSummary: "Good design with scope for UX improvements"
+    };
+
+    const PROBLEM_TITLE = "{{ problem.title|escapejs }}";
+    const PROBLEM_DESC = "{{ problem.description|escapejs }}";
+    const GEMINI_URL = "{% url 'proxy_gemini' %}";
+
+    function populate(fb) {
+      document.getElementById('scoreNum').textContent = fb.score;
+      document.getElementById('phoneTagline').textContent = "Your design needs minor improvements for better usability and recency.";
+      document.getElementById('overallScoreDisp').innerHTML = `${fb.score} <span>/ 100</span>`;
+      document.getElementById('overallScoreDesc').textContent = fb.scoreDesc;
+      document.getElementById('healthBadge').textContent = fb.health;
+      document.getElementById('aiSummaryText').textContent = fb.aiSummary;
+
+      document.getElementById('crit-usability').textContent = fb.usability;
+      document.getElementById('crit-visual').textContent = fb.visual;
+      document.getElementById('crit-access').textContent = fb.access;
+      document.getElementById('crit-flow').textContent = fb.flow;
+
+      document.getElementById('suggestionsList').innerHTML = fb.suggestions.map(s => `<li>${s}</li>`).join('');
+      document.getElementById('positiveList').innerHTML = fb.positives.map(s => `<li>${s}</li>`).join('');
+
+      document.getElementById('metricVH').textContent = `${fb.vh} / 10`;
+      document.getElementById('metricA11y').textContent = `${fb.a11y} / 10`;
+      document.getElementById('fillVH').style.width = `${fb.vh * 10}%`;
+      document.getElementById('fillA11y').style.width = `${fb.a11y * 10}%`;
+    }
+
+    function hideLoader() {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.display = 'none', 400);
+    }
+
+    async function fetchAIFeedback() {
+      const prompt = `You are a senior UX reviewer. The problem is: "${PROBLEM_TITLE}". Brief description: "${PROBLEM_DESC}". Give a concise, practical AI design feedback analysis (3-4 short paragraphs) covering: usability, visual design, accessibility, and specific improvements. Keep it focused and professional.`;
+      try {
+        const res = await fetch(GEMINI_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
+        });
+        const data = await res.json();
+        const text = (data.content || []).map(b => b.text || '').join('').trim();
+        if (text) {
+          document.getElementById('aiFeedbackBody').textContent = text;
+          document.getElementById('aiFeedbackSection').classList.add('visible');
+        }
+      } catch (e) {
+        console.warn('AI feedback fetch failed:', e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        populate(FEEDBACK);
+        hideLoader();
+        fetchAIFeedback();
+      }, 1800);
+    });
+  })();
+</script>
+
+{% endblock %}

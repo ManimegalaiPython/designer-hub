@@ -1,0 +1,923 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VTS Designer Hub{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        /* ============================================================
+           CSS VARIABLES
+        ============================================================ */
+        :root {
+            --primary: #7C3AED;
+            --secondary: #4C1D95;
+            --bg-grad-1: #F5F3FF;
+            --bg-grad-2: #EDE9FE;
+            --card-1: #C4B5FD;
+            --card-2: #EEE9FF;
+            --card-3: #E9E3FF;
+            --text-primary: #000000;
+            --text-secondary: #4C1D95;
+            --btn-grad-1: #6C63FF;
+            --btn-grad-2: #8B5CF6;
+            --footer-bg: #6B21D6;
+            --nav-height: 72px;
+        }
+
+        /* ============================================================
+           GLOBAL RESET & BASE
+        ============================================================ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        /* ============================================================
+           NAVBAR
+        ============================================================ */
+        .vts-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--nav-height);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(196, 181, 253, 0.35);
+            box-shadow: 0 4px 24px rgba(124, 58, 237, 0.06);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+            animation: navFadeIn 0.4s ease both;
+        }
+
+        .vts-navbar.scrolled {
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 6px 32px rgba(124, 58, 237, 0.12);
+        }
+
+        @keyframes navFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .vts-navbar-inner {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        /* --- Logo --- */
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .logo-vts {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size:1.65rem;
+            color: var(--text-primary);
+        }
+
+        /* --- Desktop Nav Links --- */
+        .vts-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .vts-nav-links .nav-link {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 1.2rem;
+            color: #555;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: all 0.22s ease;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .vts-nav-links .nav-link:hover,
+        .vts-nav-links .nav-link.active {
+            color: var(--primary);
+            background: rgba(124, 58, 237, 0.07);
+        }
+
+        .vts-nav-links .nav-link.active {
+            font-weight: 600;
+        }
+
+        .vts-nav-links .nav-link.active::after {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--primary);
+            margin: 3px auto 0;
+        }
+
+        /* --- Nav Right --- */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .nav-login-link {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 14px;
+            border-radius: 50px;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .nav-login-link:hover {
+            color: var(--primary);
+            background: rgba(124, 58, 237, 0.06);
+        }
+
+        .nav-login-link .bi {
+            font-size: 1.2rem;
+        }
+
+        /* --- Primary Button --- */
+        .btn-vts-primary {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #fff !important;
+            background: linear-gradient(135deg, var(--btn-grad-1), var(--btn-grad-2));
+            border: none;
+            border-radius: 50px;
+            padding: 9px 22px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(108, 99, 255, 0.35);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .btn-vts-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #8B5CF6, #6C63FF);
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .btn-vts-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-vts-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 7px 20px rgba(108, 99, 255, 0.45);
+        }
+
+        .btn-vts-primary span,
+        .btn-vts-primary i {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Secondary Button --- */
+        .btn-vts-secondary {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary) !important;
+            background: #fff;
+            border: 1.5px solid var(--card-1);
+            border-radius: 50px;
+            padding: 8px 20px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .btn-vts-secondary:hover {
+            background: var(--card-2);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* --- Profile Dropdown --- */
+        .dropdown-toggle::after {
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+
+        .dropdown-menu {
+            border-radius: 14px;
+            border: 1px solid var(--card-1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.2rem;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-item i {
+            font-size: 1.2rem;
+            width: 20px;
+            color: var(--primary);
+        }
+
+        .dropdown-item:hover {
+            background: var(--card-2);
+        }
+
+        .dropdown-divider {
+            margin: 6px 0;
+            background: var(--card-1);
+        }
+
+        /* --- Hamburger --- */
+        .vts-toggler {
+            border: none;
+            background: transparent;
+            padding: 7px 9px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.5rem;
+            line-height: 1;
+            transition: background 0.2s ease;
+        }
+
+        .vts-toggler:hover {
+            background: rgba(124, 58, 237, 0.08);
+        }
+
+        /* --- Responsive Nav Hide/Show --- */
+        @media (max-width: 991.98px) {
+            .vts-desktop-only {
+                display: none !important;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .vts-mobile-only {
+                display: none !important;
+            }
+        }
+
+        /* ============================================================
+           MOBILE DRAWER
+        ============================================================ */
+        .vts-mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1100;
+        }
+
+        .vts-mobile-menu.open {
+            display: block;
+        }
+
+        .mobile-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.28);
+            backdrop-filter: blur(4px);
+        }
+
+        .mobile-drawer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: min(300px, 85vw);
+            height: 100%;
+            background: #fff;
+            box-shadow: -8px 0 40px rgba(76, 29, 149, 0.15);
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            animation: drawerSlide 0.28s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+        }
+
+        @keyframes drawerSlide {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .mobile-close {
+            align-self: flex-end;
+            background: var(--card-2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        .mobile-close:hover {
+            background: var(--card-1);
+        }
+
+        .mobile-nav-link {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 11px 14px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-nav-link .bi {
+            opacity: 0.65;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: var(--card-2);
+            color: var(--primary);
+        }
+
+        .mobile-nav-link.active .bi {
+            opacity: 1;
+        }
+
+        .mobile-divider {
+            height: 1px;
+            background: var(--card-2);
+            margin: 8px 0;
+            border: none;
+        }
+
+        .mobile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .mobile-actions .btn-vts-primary,
+        .mobile-actions .btn-vts-secondary {
+            justify-content: center;
+        }
+
+        /* ============================================================
+           FOOTER  —  Bootstrap Icons used for social links
+        ============================================================ */
+        .vts-footer {
+            background: #6B21D6;
+            color: #fff;
+            padding: 52px 48px 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.2fr 1.2fr;
+            gap: 0;
+            align-items: start;
+            margin-bottom: 52px;
+        }
+
+        /* Brand */
+        .footer-brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            margin-bottom: 18px;
+        }
+
+        .footer-logo-vts {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: #C4B5FD;
+            letter-spacing: -0.3px;
+        }
+
+        .footer-logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        .footer-tagline {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.88);
+            line-height: 1.65;
+            max-width: 300px;
+            margin-bottom: 36px;
+        }
+
+        /* Social icons — Bootstrap Icons */
+        .social-icons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.55);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 2rem;
+            text-decoration: none;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .social-icon:hover {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        /* Footer column headings */
+        .footer-col-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.5;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 28px;
+        }
+
+        /* Footer links */
+        .footer-link-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-link-list a {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.88);
+            text-decoration: none;
+            transition: color 0.18s ease;
+            display: inline-block;
+        }
+
+        .footer-link-list a:hover {
+            color: #fff;
+        }
+
+        /* Footer bottom bar */
+        .footer-divider {
+            border: none;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0;
+        }
+
+        .footer-bottom {
+            padding: 22px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-copyright {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            margin: 0;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-bottom-links a {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.18s ease;
+        }
+
+        .footer-bottom-links a:hover {
+            color: #fff;
+        }
+
+        /* ============================================================
+           RESPONSIVE — FOOTER
+        ============================================================ */
+        @media (max-width: 991px) {
+            .vts-footer {
+                padding: 44px 28px 0;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 36px;
+            }
+
+            .footer-grid>div:first-child {
+                grid-column: 1 / -1;
+            }
+
+            .footer-tagline {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .vts-footer {
+                padding: 36px 20px 0;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-grid>div:first-child {
+                grid-column: auto;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-bottom-links {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- Your custom CSS overrides -->
+    <link rel="stylesheet" href="{% static 'hubapp/css/style.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- ================================================================
+     NAVBAR
+================================================================ -->
+    <nav class="vts-navbar" id="vtsNavbar" role="navigation" aria-label="Main navigation">
+        <div class="vts-navbar-inner container-fluid">
+
+            <!-- Logo -->
+            <a class="navbar-logo" href="{% url 'home' %}" aria-label="VTS Designer Hub home">
+                <span class="logo-vts">VTS</span>
+                <span class="logo-text">Designer Hub</span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <ul class="vts-nav-links vts-desktop-only" role="list">
+                <li><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                        href="{% url 'home' %}">Home</a></li>
+                <li><a class="nav-link {% if request.resolver_match.url_name == 'explore' %}active{% endif %}"
+                        href="{% url 'explore' %}">Explore</a></li>
+                <li><a class="nav-link {% if request.resolver_match.url_name == 'marketplace' %}active{% endif %}"
+                        href="{% url 'marketplace' %}">Market Place</a></li>
+                <li><a class="nav-link {% if request.resolver_match.url_name == 'upload' %}active{% endif %}"
+                        href="{% url 'upload' %}">Upload</a></li>
+            </ul>
+
+            <!-- Desktop Right: Profile dropdown with link to designer_profile -->
+            <div class="nav-right vts-desktop-only">
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-link nav-login-link dropdown-toggle" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle" aria-hidden="true"></i>
+                        {{ user.first_name|default:user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        {% if user.designer %}
+                        <li><a class="dropdown-item" href="{% url 'designer_profile' user.designer.id %}"><i
+                                    class="bi bi-person-badge"></i> My Profile</a></li>
+                        {% else %}
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person-badge"></i> Profile
+                                (incomplete)</a></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i
+                                    class="bi bi-box-arrow-right"></i> Logout</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="nav-login-link">
+                    <i class="bi bi-person-circle" aria-hidden="true"></i> Login
+                </a>
+                <a href="{% url 'signup' %}" class="btn-vts-primary">
+                    <span>Signup</span>
+                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Mobile Hamburger -->
+            <button class="vts-toggler vts-mobile-only" id="vtsToggler" aria-label="Open navigation menu"
+                aria-expanded="false" aria-controls="vtsMobileMenu">
+                <i class="bi bi-list" aria-hidden="true"></i>
+            </button>
+
+        </div>
+    </nav>
+
+
+    <!-- ================================================================
+     MOBILE DRAWER
+================================================================ -->
+    <div class="vts-mobile-menu" id="vtsMobileMenu" role="dialog" aria-modal="true" aria-label="Navigation menu">
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+        <div class="mobile-drawer">
+
+            <button class="mobile-close" id="mobileClose" aria-label="Close navigation menu">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+
+            <a class="mobile-nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                href="{% url 'home' %}">
+                <i class="bi bi-house-door" aria-hidden="true"></i> Home
+            </a>
+            <a class="mobile-nav-link {% if request.resolver_match.url_name == 'explore' %}active{% endif %}"
+                href="{% url 'explore' %}">
+                <i class="bi bi-compass" aria-hidden="true"></i> Explore
+            </a>
+            <a class="mobile-nav-link {% if request.resolver_match.url_name == 'marketplace' %}active{% endif %}"
+                href="{% url 'marketplace' %}">
+                <i class="bi bi-shop" aria-hidden="true"></i> Market Place
+            </a>
+            <a class="mobile-nav-link {% if request.resolver_match.url_name == 'upload' %}active{% endif %}"
+                href="{% url 'upload' %}">
+                <i class="bi bi-cloud-upload" aria-hidden="true"></i> Upload
+            </a>
+
+            <hr class="mobile-divider">
+
+            <div class="mobile-actions">
+                {% if user.is_authenticated %}
+                {% if user.designer %}
+                <a href="{% url 'designer_profile' user.designer.id %}" class="btn-vts-secondary"><i
+                        class="bi bi-person-badge"></i> My Profile</a>
+                {% else %}
+                <a href="#" class="btn-vts-secondary"><i class="bi bi-person-badge"></i> Profile (incomplete)</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="btn-vts-primary"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn-vts-secondary"><i class="bi bi-person-circle"></i> Login</a>
+                <a href="{% url 'signup' %}" class="btn-vts-primary"><span>Signup</span><i
+                        class="bi bi-arrow-right"></i></a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ================================================================
+     PAGE CONTENT
+================================================================ -->
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+
+    <!-- ================================================================
+     FOOTER
+================================================================ -->
+    <footer class="vts-footer" role="contentinfo">
+
+        <div class="footer-grid">
+
+            <!-- Brand Column -->
+            <div>
+                <a class="footer-brand-logo" href="{% url 'home' %}" aria-label="VTS Designer Hub home">
+                    <span class="footer-logo-vts">VTS</span>
+                    <span class="footer-logo-text">Designer Hub</span>
+                </a>
+
+                <p class="footer-tagline">
+                    The all-in-one platform where designers grow, compete, and get hired by leading companies worldwide.
+                </p>
+
+                <!-- Social Icons — all using Bootstrap Icons -->
+                <div class="social-icons">
+                    <a href="#" class="social-icon" aria-label="Twitter / X"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="social-icon" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-icon" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                </div>
+            </div>
+
+            <!-- Platform Column -->
+            <div>
+                <p class="footer-col-title">Platform</p>
+                <ul class="footer-link-list">
+                    <li><a href="{% url 'explore' %}">Explore Designers</a></li>
+                    <li><a href="{% url 'marketplace' %}">Problem Marketplace</a></li>
+                    <li><a href="{% url 'upload' %}">Upload</a></li>
+                    <li><a href="#">AI Feedback</a></li>
+                </ul>
+            </div>
+
+            <!-- Company Column -->
+            <div>
+                <p class="footer-col-title">Company</p>
+                <ul class="footer-link-list">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <hr class="footer-divider">
+
+        <div class="footer-bottom">
+            <p class="footer-copyright">© 2026 VTS Designer Hub. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* ----------------------------------------------------------------
+           Navbar — scroll shadow effect
+        ---------------------------------------------------------------- */
+        const navbar = document.getElementById('vtsNavbar');
+        window.addEventListener('scroll', function () {
+            navbar.classList.toggle('scrolled', window.scrollY > 12);
+        }, { passive: true });
+
+
+        /* ----------------------------------------------------------------
+           Mobile Drawer
+        ---------------------------------------------------------------- */
+        const toggler = document.getElementById('vtsToggler');
+        const mobileMenu = document.getElementById('vtsMobileMenu');
+        const closeBtn = document.getElementById('mobileClose');
+        const overlay = document.getElementById('mobileOverlay');
+
+        function openMenu() {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            toggler.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+            toggler.setAttribute('aria-expanded', 'false');
+        }
+
+        if (toggler) toggler.addEventListener('click', openMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if (overlay) overlay.addEventListener('click', closeMenu);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+        });
+
+        /* Close drawer when a nav link is tapped on mobile */
+        document.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+            link.addEventListener('click', closeMenu);
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

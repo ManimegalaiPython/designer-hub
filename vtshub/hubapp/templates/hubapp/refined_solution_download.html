@@ -1,0 +1,459 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0eef8;
+    min-height: 100vh;
+    color: #333;
+  }
+
+  .page-wrapper {
+    padding: 28px 20px 36px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #5a3fa0;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  /* ── Before / After Panel ── */
+  .before-after-panel {
+    background: #e8e2f8;
+    border-radius: 20px;
+    padding: 24px 16px 28px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .phone-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .col-label {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .phone-img-wrap {
+ width: 100%;
+    max-width: 500px;    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 10px 36px rgba(80, 40, 160, 0.38);
+  }
+
+  .phone-img-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ── Applied Improvements ── */
+  .improvements-card {
+    background: #e8e2f8;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
+
+  .improvements-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #5a3fa0;
+    margin-bottom: 14px;
+  }
+
+  .improvement-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 20px;
+    color: #444;
+    margin-bottom: 10px;
+  }
+
+  .improvement-item:last-child { margin-bottom: 0; }
+
+  .improvement-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #5a3fa0;
+    flex-shrink: 0;
+  }
+
+  /* ── Update Design Section ── */
+  .update-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 14px;
+  }
+
+  .upload-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border: 1px solid #e0d8f0;
+  }
+
+  .upload-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #5a3fa0;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .url-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .url-input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 16px;
+    color: #aaa;
+    outline: none;
+    background: #fafafa;
+  }
+
+  .url-input:focus { border-color: #6a3fcf; }
+
+  .feedback-btn {
+    background: #6a3fcf;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .feedback-btn:active { opacity: 0.85; }
+
+  /* ── Change Summary ── */
+  .change-summary-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 28px;
+    border: 1px solid #e0d8f0;
+  }
+
+  .change-summary-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .change-summary-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e0d8f0;
+    border-radius: 10px;
+    padding: 11px 14px;
+    background: #fafafa;
+    cursor: text;
+  }
+
+  .change-summary-placeholder {
+    flex: 1;
+    font-size: 16px;
+    color: #bbb;
+  }
+
+  .edit-icon { color: #6a3fcf; font-size: 15px; }
+
+  /* ── Bottom Buttons ── */
+  .bottom-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding-bottom: 4px;
+  }
+
+  .btn-resubmit {
+    background: #6a3fcf;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .btn-rerun {
+    background: white;
+    color: #333;
+    border: 1.5px solid #ccc;
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .btn-resubmit:active { opacity: 0.85; }
+  .btn-rerun:active { background: #f5f5f5; }
+
+
+  /* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+/* Large Tablets */
+@media (max-width: 1024px) {
+
+  .before-after-panel {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .phone-img-wrap {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .bottom-btns {
+    flex-direction: column;
+  }
+}
+
+
+/* Tablets */
+@media (max-width: 768px) {
+
+  .page-wrapper {
+    padding: 20px 14px 30px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+  }
+
+  .before-after-panel {
+    padding: 18px 12px 22px;
+    gap: 22px;
+  }
+
+  .phone-img-wrap {
+    max-width: 100%;
+    border-radius: 18px;
+  }
+
+  .improvements-title {
+    font-size: 20px;
+  }
+
+  .improvement-item {
+    font-size: 16px;
+  }
+
+  .url-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .feedback-btn {
+    width: 100%;
+  }
+
+  .bottom-btns {
+    flex-direction: column;
+  }
+
+  .btn-resubmit,
+  .btn-rerun {
+    width: 100%;
+  }
+}
+
+
+/* Mobile Devices */
+@media (max-width: 480px) {
+
+  .page-wrapper {
+    padding: 16px 12px 26px;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .before-after-panel {
+    border-radius: 16px;
+    padding: 14px 10px 18px;
+  }
+
+  .col-label {
+    font-size: 14px;
+  }
+
+  .phone-img-wrap {
+    width: 100%;
+    border-radius: 16px;
+  }
+
+  .improvements-card,
+  .upload-card,
+  .change-summary-card {
+    border-radius: 14px;
+    padding: 14px;
+  }
+
+  .improvements-title {
+    font-size: 18px;
+  }
+
+  .improvement-item {
+    font-size: 15px;
+    align-items: flex-start;
+  }
+
+  .update-section-title {
+    font-size: 18px;
+  }
+
+  .upload-card-title,
+  .change-summary-title {
+    font-size: 15px;
+  }
+
+  .url-input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .feedback-btn,
+  .btn-resubmit,
+  .btn-rerun {
+    font-size: 15px;
+    padding: 12px 16px;
+  }
+
+  .change-summary-placeholder {
+    font-size: 14px;
+  }
+}
+
+
+</style>
+
+<div class="page-wrapper">
+
+  <div class="breadcrumb">Marketplace/Redesign/Solution</div>
+  <h1>Refine your solution</h1>
+  <p class="subtitle">Apply AI suggestions and improve your design<br>before final submission</p>
+
+  <!-- Before / After -->
+  <div class="before-after-panel">
+    <div class="phone-col">
+      <div class="col-label">Before</div>
+      <div class="phone-img-wrap">
+        <img src="{% static 'hubapp/images/image 73.png' %}" alt="Before design" />
+      </div>
+    </div>
+    <div class="phone-col">
+      <div class="col-label">After</div>
+      <div class="phone-img-wrap">
+        <img src="{% static 'hubapp/images/image 72.png' %}" alt="After design" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Applied Improvements -->
+  <div class="improvements-card">
+    <div class="improvements-title">Applied Improvements</div>
+    <div class="improvement-item"><div class="improvement-dot"></div> Reduced onboarding screens</div>
+    <div class="improvement-item"><div class="improvement-dot"></div> Improved contrast</div>
+    <div class="improvement-item"><div class="improvement-dot"></div> Simplified user flow</div>
+    <div class="improvement-item"><div class="improvement-dot"></div> Added progress indicators</div>
+  </div>
+
+  <!-- Update Design -->
+  <div class="update-section-title">Update Design</div>
+
+  <div class="upload-card">
+    <div class="upload-card-title"><span>⬆️</span> Upload New File</div>
+    <div class="url-input-row">
+      <input class="url-input" type="text" placeholder="https://www.figma.com/desig-VGETuYTJDZ">
+      <button class="feedback-btn">Get Feedback</button>
+    </div>
+  </div>
+
+  <div class="change-summary-card">
+    <div class="change-summary-title">Change Summary</div>
+    <div class="change-summary-input">
+      <span class="change-summary-placeholder">Explain what improvements you made...</span>
+      <span class="edit-icon">✏️</span>
+    </div>
+  </div>
+
+  <!-- Bottom Buttons -->
+  <div class="bottom-btns">
+<a href="{% url 'update_submission' problem.pk %}" style="flex:1; text-decoration:none;">
+  <button class="btn-resubmit" style="width:100%;">Re-submit Solution</button>
+</a>    <button class="btn-rerun">Re-run AI Feedback</button>
+  </div>
+
+</div>
+
+{% endblock %}

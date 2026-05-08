@@ -1,0 +1,65 @@
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: linear-gradient(#F5F3FF, #EDE9EE);
+}
+
+/* Navbar */
+.navbar .nav-link {
+    color: #000;
+}
+
+.navbar .nav-link:hover {
+    color: #7C3AED;
+}
+
+/* Button */
+.btn-primary-custom {
+    background: linear-gradient(45deg, #6C63FF, #8B5CF6);
+    color: white;
+    border-radius: 20px;
+    padding: 6px 18px;
+    border: none;
+}
+
+/* Footer */
+.footer {
+    background: #4C1D95;
+    color: white;
+}
+
+/* Footer Titles */
+.footer-title {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Footer Links */
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: white;
+}
+
+.footer-links a:hover {
+    color: #C4B5FD;
+}
+
+/* Social Icons */
+.social-circle {
+    width: 45px;
+    height: 45px;
+    border: 1px solid white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

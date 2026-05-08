@@ -1,0 +1,577 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+{% block extra_head %}
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Sansation Font -->
+<link href="https://fonts.cdnfonts.com/css/sansation" rel="stylesheet">
+
+<style>
+
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:#ede9f8;
+    min-height:100vh;
+    color:#333;
+    overflow-x:hidden;
+  }
+
+  /* =========================
+      TYPOGRAPHY
+  ========================== */
+
+  h1,h2,h3,.page-title,.section-title{
+    font-family:'Inter',sans-serif;
+  }
+
+  h4,h5,h6,.page-subtitle{
+    font-family:'Sansation',sans-serif;
+  }
+
+  p,
+  span,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label{
+    font-family:'DM Sans',sans-serif;
+  }
+
+  /* =========================
+      PAGE LAYOUT
+  ========================== */
+
+  .upload-page{
+    min-height:calc(100vh - 72px);
+    padding:32px 20px 48px;
+    width:100%;
+  }
+
+  /* =========================
+      BREADCRUMB
+  ========================== */
+
+  .breadcrumb-upload{
+    font-size:13px;
+    color:#888;
+    margin-bottom:18px;
+    text-align:left;
+    max-width:1400px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .breadcrumb-upload a{
+    color:#888;
+    text-decoration:none;
+    transition:0.3s ease;
+  }
+
+  .breadcrumb-upload a:hover{
+    color:#6a3fcf;
+  }
+
+  /* =========================
+      PAGE TITLE
+  ========================== */
+
+  .page-title-wrap{
+    text-align:center;
+    margin-bottom:32px;
+  }
+
+  .page-title{
+    font-size:42px;
+    font-weight:800;
+    color:#5a3fa0;
+    margin-bottom:8px;
+    line-height:1.2;
+  }
+
+  .page-subtitle{
+    font-size:20px;
+    color:#666;
+    line-height:1.5;
+  }
+
+  /* =========================
+      CARD
+  ========================== */
+
+  .upload-card{
+    background:#fff;
+    border-radius:24px;
+    padding:40px;
+    max-width:1200px;
+    margin:0 auto;
+    border:1px solid #e8e2f8;
+    box-shadow:0 4px 20px rgba(0,0,0,0.04);
+  }
+
+  /* =========================
+      TWO COLUMN
+  ========================== */
+
+  .two-col-layout{
+    display:flex;
+    gap:40px;
+    align-items:flex-start;
+  }
+
+  .form-col{
+    flex:1.2;
+    min-width:0;
+  }
+
+  .image-col{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding-top:10px;
+  }
+
+  .image-col img{
+    width:100%;
+    max-width:520px;
+    height:auto;
+    object-fit:contain;
+  }
+
+  /* =========================
+      SECTION TITLE
+  ========================== */
+
+  .section-title{
+    font-size:24px;
+    font-weight:700;
+    color:#222;
+    margin-bottom:6px;
+  }
+
+  .section-desc{
+    font-size:16px;
+    color:#777;
+    margin-bottom:24px;
+    line-height:1.6;
+  }
+
+  /* =========================
+      FORM
+  ========================== */
+
+  .form-group{
+    margin-bottom:20px;
+  }
+
+  .form-label{
+    font-size:15px;
+    font-weight:600;
+    color:#333;
+    margin-bottom:8px;
+    display:block;
+  }
+
+  .form-control-custom{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:15px;
+    color:#333;
+    background:#fff;
+    outline:none;
+    transition:0.3s ease;
+    appearance:none;
+  }
+
+  .form-control-custom::placeholder{
+    color:#bbb;
+  }
+
+  .form-control-custom:focus{
+    border-color:#6a3fcf;
+    box-shadow:0 0 0 3px rgba(106,63,207,0.08);
+  }
+
+  select.form-control-custom{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236a3fcf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    padding-right:40px;
+    cursor:pointer;
+  }
+
+  /* =========================
+      TAGS
+  ========================== */
+
+  .tags-input-wrap{
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:12px 14px;
+    background:#fff;
+    margin-bottom:12px;
+  }
+
+  .tags-input-wrap input{
+    border:none;
+    outline:none;
+    font-size:15px;
+    width:100%;
+    background:transparent;
+  }
+
+  .tag-chips-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-top:8px;
+  }
+
+  .tag-chip{
+    background:#7c4dff;
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:50px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+    transition:0.3s ease;
+  }
+
+  .tag-chip:hover{
+    opacity:0.9;
+  }
+
+  .add-custom-tag-btn{
+    background:transparent;
+    border:1.5px solid #7c4dff;
+    color:#7c4dff;
+    border-radius:50px;
+    padding:8px 14px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+  }
+
+  .add-custom-tag-btn:hover{
+    background:rgba(124,77,255,0.08);
+  }
+
+  /* =========================
+      BACK BUTTON
+  ========================== */
+
+  .bottom-bar{
+    margin-top:32px;
+    display:flex;
+    align-items:center;
+  }
+
+  .btn-back{
+    background:transparent;
+    border:none;
+    color:#555;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    text-decoration:none;
+    transition:0.3s ease;
+  }
+
+  .btn-back:hover{
+    color:#6a3fcf;
+  }
+
+  /* =========================
+      TABLET
+  ========================== */
+
+  @media (max-width:1024px){
+
+    .upload-card{
+      padding:30px;
+    }
+
+    .page-title{
+      font-size:36px;
+    }
+
+    .page-subtitle{
+      font-size:18px;
+    }
+
+  }
+
+  /* =========================
+      MOBILE
+  ========================== */
+
+  @media (max-width:768px){
+
+    .two-col-layout{
+      flex-direction:column;
+      gap:24px;
+    }
+
+    .image-col{
+      display:none;
+    }
+
+    .upload-card{
+      padding:24px 18px;
+      border-radius:20px;
+    }
+
+    .page-title{
+      font-size:30px;
+    }
+
+    .page-subtitle{
+      font-size:16px;
+    }
+
+    .section-title{
+      font-size:20px;
+    }
+
+    .form-control-custom{
+      padding:12px 14px;
+    }
+
+    .tag-chip{
+      font-size:13px;
+    }
+
+  }
+
+/* =========================
+    CUSTOM TAG INPUT
+========================= */
+
+.custom-tag-input-row{
+    display:none;
+    align-items:center;
+    gap:10px;
+    margin-top:14px;
+    width:100%;
+}
+
+.custom-tag-input-row input{
+    flex:1;
+    height:44px;
+    border:1px solid #d8cdf8;
+    border-radius:12px;
+    padding:0 16px;
+    font-size:14px;
+    font-family:'DM Sans',sans-serif;
+    background:#fff;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.custom-tag-input-row input:focus{
+    border-color:#7c4dff;
+    box-shadow:0 0 0 3px rgba(124,77,255,0.08);
+}
+
+.custom-tag-input-row input::placeholder{
+    color:#aaa;
+}
+
+.custom-tag-input-row button{
+    height:44px;
+    padding:0 20px;
+    border:none;
+    border-radius:12px;
+    background:#7c4dff;
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+    font-family:'DM Sans',sans-serif;
+    cursor:pointer;
+    transition:0.3s ease;
+    white-space:nowrap;
+}
+
+.custom-tag-input-row button:hover{
+    background:#6938ef;
+}
+
+/* Mobile */
+@media (max-width:768px){
+
+    .custom-tag-input-row{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .custom-tag-input-row button{
+        width:100%;
+    }
+
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="upload-page">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-upload">
+    <a href="{% url 'home' %}">Home</a> / Upload
+  </div>
+
+  <!-- Page title -->
+  <div class="page-title-wrap">
+    <div class="page-title">Upload Your Project</div>
+    <div class="page-subtitle">Showcase your work and get hired by top companies</div>
+  </div>
+
+  <!-- Main card -->
+  <div class="upload-card">
+    <div class="two-col-layout">
+
+      <!-- LEFT: Form -->
+      <div class="form-col">
+        <div class="section-title">Basic Information</div>
+        <div class="section-desc">Fill the basic information about your design project.</div>
+
+        <form method="post" enctype="multipart/form-data" id="uploadForm">
+          {% csrf_token %}
+
+          <!-- Basic Information / Project Title -->
+          <div class="form-group">
+            <label class="form-label">Basic Information</label>
+            <input type="text" class="form-control-custom" name="title" placeholder="Enter your Project Title" required>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-control-custom" name="category">
+              <option value="">Select a category</option>
+              <option value="UI/UX">UI/UX</option>
+              <option value="Web Design">Web Design</option>
+              <option value="Mobile App">Mobile App</option>
+              <option value="Branding">Branding</option>
+              <option value="Dashboard">Dashboard</option>
+              <option value="Illustration">Illustration</option>
+            </select>
+          </div>
+
+          <!-- Tags -->
+          <div class="form-group">
+            <label class="form-label">Tags</label>
+            <div class="tags-input-wrap">
+              <input type="text" placeholder="Add tag related to your project" id="tagSearchInput" autocomplete="off">
+            </div>
+
+            <div class="tag-chips-row" id="tagChipsRow">
+              <span class="tag-chip" data-tag="UI/UX">UI / UX <span class="remove-tag">✕</span></span>
+              <span class="tag-chip" data-tag="Mobile App">Mobile App <span class="remove-tag">✕</span></span>
+              <span class="tag-chip" data-tag="Dashboard">Dashboard <span class="remove-tag">✕</span></span>
+              <button type="button" class="add-custom-tag-btn" id="addTagBtn">+ Add Custom Tag</button>
+            </div>
+
+            <div class="custom-tag-input-row" id="customTagRow">
+              <input type="text" id="newTagName" placeholder="Tag name">
+              <button type="button" id="confirmTagBtn">Add</button>
+            </div>
+
+            <input type="hidden" name="tags" id="tagsHidden" value="UI/UX,Mobile App,Dashboard">
+          </div>
+
+        </form>
+      </div>
+
+      <!-- RIGHT: Illustration -->
+      <div class="image-col">
+        <img src="{% static 'hubapp/images/image 85.png' %}" alt="Upload illustration" />
+      </div>
+
+    </div>
+
+    <!-- Back button below the two-col -->
+    <div class="bottom-bar">
+      <a href="javascript:history.back()" class="btn-back">← Back</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const tagChipsRow = document.getElementById('tagChipsRow');
+  const tagsHidden  = document.getElementById('tagsHidden');
+  const addTagBtn   = document.getElementById('addTagBtn');
+  const customTagRow = document.getElementById('customTagRow');
+  const newTagName  = document.getElementById('newTagName');
+  const confirmTagBtn = document.getElementById('confirmTagBtn');
+
+  function updateHidden() {
+    const chips = tagChipsRow.querySelectorAll('.tag-chip');
+    tagsHidden.value = Array.from(chips).map(c => c.dataset.tag).join(',');
+  }
+
+  function bindRemove(chip) {
+    chip.querySelector('.remove-tag').addEventListener('click', (e) => {
+      e.stopPropagation();
+      chip.remove();
+      updateHidden();
+    });
+  }
+
+  // Bind existing chips
+  tagChipsRow.querySelectorAll('.tag-chip').forEach(bindRemove);
+
+  function addTag(name) {
+    const exists = Array.from(tagChipsRow.querySelectorAll('.tag-chip'))
+      .some(c => c.dataset.tag.toLowerCase() === name.toLowerCase());
+    if (exists || !name.trim()) return;
+
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.dataset.tag = name;
+    chip.innerHTML = `${name} <span class="remove-tag">✕</span>`;
+    // Insert before the Add button
+    tagChipsRow.insertBefore(chip, addTagBtn);
+    bindRemove(chip);
+    updateHidden();
+  }
+
+  addTagBtn.addEventListener('click', () => {
+    customTagRow.style.display = 'flex';
+    newTagName.focus();
+  });
+
+  confirmTagBtn.addEventListener('click', () => {
+    addTag(newTagName.value.trim());
+    newTagName.value = '';
+    customTagRow.style.display = 'none';
+  });
+
+  newTagName.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); confirmTagBtn.click(); }
+  });
+</script>
+{% endblock %}

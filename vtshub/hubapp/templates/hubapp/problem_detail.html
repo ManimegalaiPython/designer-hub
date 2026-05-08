@@ -1,0 +1,797 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<!-- Google Fonts -->
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+  rel="stylesheet">
+<!-- Sansation font -->
+<link href="https://fonts.cdnfonts.com/css/sansation" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  /* ══════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════ */
+  :root {
+    --primary: #7C3AED;
+    --secondary: #4C1D95;
+    --bg-a: #F5F3FF;
+    --bg-b: #EDE9FE;
+    --c1: #C4B5FD;
+    --c2: #EEE9FF;
+    --c3: #E9E3FF;
+    --white: #FFFFFF;
+    --txt: #12082a;
+    --body-txt: #4a4260;
+    --muted: #7c6fa0;
+    --g1: #6C63FF;
+    --g2: #8B5CF6;
+    --r-sm: 10px;
+    --r: 16px;
+    --r-lg: 20px;
+    --sh-sm: 0 2px 14px rgba(124, 58, 237, .08);
+    --sh: 0 4px 26px rgba(124, 58, 237, .12);
+    --sh-lg: 0 8px 42px rgba(124, 58, 237, .18);
+    --bdr: 1px solid rgba(196, 181, 253, .4);
+  }
+
+  /* ========== TYPOGRAPHY RULES ========== */
+  /* Headings → Inter */
+  h1, h2, h3, .pd-title, .pd-card-head, .sb-head, .pd-badge,
+  .pd-btn, .sb-reward-bar .sb-head, .sb-deadline, .sb-rating .rv,
+  .chip, .btn, .pd-breadcrumb a {
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Subheadings → Sansation */
+  h4, h5, h6, .pd-breadcrumb .cur, .sb-row .lbl, .sb-name, .sb-role,
+  .sb-about, .pd-intro, .sb-stars, .pd-badge-icon i {
+    font-family: 'Sansation', sans-serif;
+  }
+
+  /* Body text & everything else → DM Sans */
+  body, p, span, li, .pd-card p, .pd-list li, .sb-about, .pd-intro,
+  .sb-row, .sb-person, .sb-rating .rl, .pd-hero-ph, .pd-card-purple p {
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ══════════════════════════════════════════════
+   PAGE BASE
+══════════════════════════════════════════════ */
+  .pd-page {
+    background: var(--bg-a);
+    min-height: 100vh;
+    padding: 36px 0 80px;
+    color: var(--txt);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ══════════════════════════════════════════════
+   BREADCRUMB
+══════════════════════════════════════════════ */
+  .pd-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .pd-breadcrumb a {
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: opacity .18s;
+  }
+
+  .pd-breadcrumb a:hover {
+    opacity: .7;
+  }
+
+  .pd-breadcrumb .sep {
+    color: var(--c1);
+  }
+
+  .pd-breadcrumb .cur {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+  }
+
+  /* ══════════════════════════════════════════════
+   LEFT MAIN COLUMN
+══════════════════════════════════════════════ */
+  .pd-title {
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 800;
+    color: var(--txt);
+    line-height: 1.2;
+    letter-spacing: -.5px;
+    margin-bottom: 14px;
+  }
+
+  .pd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    border: 1.5px solid var(--c1);
+    border-radius: 50px;
+    padding: 6px 16px 6px 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--secondary);
+    box-shadow: var(--sh-sm);
+    margin-bottom: 14px;
+  }
+
+  .pd-badge-icon {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--g1), var(--g2));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .pd-intro {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    color: var(--body-txt);
+    line-height: 1.72;
+    margin-bottom: 18px;
+  }
+
+  .pd-hero {
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--c3) 0%, var(--c2) 100%);
+    aspect-ratio: 16/7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--sh);
+    border: var(--bdr);
+    margin-bottom: 20px;
+  }
+
+  .pd-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s ease;
+  }
+
+  .pd-hero:hover img {
+    transform: scale(1.025);
+  }
+
+  .pd-hero-ph {
+    font-size: 3rem;
+    color: var(--c1);
+  }
+
+  .pd-card {
+    background: rgb(239, 238, 239);
+    border-radius: var(--r);
+    padding: clamp(18px, 4vw, 24px) clamp(18px, 4vw, 26px);
+    box-shadow: var(--sh-sm);
+    border: var(--bdr);
+    margin-bottom: 18px;
+  }
+
+  .pd-card-purple {
+    background: linear-gradient(135deg, #f0ebff 0%, var(--c3) 100%);
+    border-radius: var(--r);
+    padding: clamp(18px, 4vw, 24px) clamp(18px, 4vw, 26px);
+    border: 1.5px solid var(--c1);
+    margin-bottom: 18px;
+  }
+
+  .pd-card-lined {
+    background: rgb(242, 241, 242);
+    border-radius: var(--r);
+    padding: clamp(18px, 4vw, 24px) clamp(18px, 4vw, 26px);
+    box-shadow: var(--sh-sm);
+    border: var(--bdr);
+    border-left: 5px solid var(--primary) !important;
+    margin-bottom: 18px;
+  }
+
+  .pd-card-head {
+    font-size: clamp(1rem, 4.5vw, 1.2rem);
+    font-weight: 800;
+    color: var(--secondary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .pd-card-head::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 18px;
+    background: linear-gradient(to bottom, var(--g1), var(--g2));
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .pd-card p,
+  .pd-card-purple p {
+    font-size: clamp(0.9rem, 4vw, 1rem);
+    color: var(--body-txt);
+    line-height: 1.78;
+  }
+
+  .pd-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .pd-list li {
+    font-size: clamp(0.85rem, 4vw, 1rem);
+    color: var(--body-txt);
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    line-height: 1.6;
+  }
+
+  .li-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: inline-block;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .pd-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 32px;
+    background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%);
+    color: #fff !important;
+    font-size: clamp(0.9rem, 4vw, 1rem);
+    font-weight: 700;
+    border-radius: 50px;
+    text-decoration: none !important;
+    box-shadow: 0 4px 20px rgba(108, 99, 255, .36);
+    transition: transform .2s, box-shadow .2s, filter .2s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .pd-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 34px rgba(108, 99, 255, .5);
+    filter: brightness(1.07);
+  }
+
+  /* ══════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════ */
+  .sb-sticky {
+    position: sticky;
+    top: 110px;
+  }
+
+  .sb-wrap {
+    background: var(--bg-b);
+    border-radius: var(--r-lg);
+    box-shadow: var(--sh-lg);
+    border: var(--bdr);
+    overflow: hidden;
+  }
+
+  .sb-sec {
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(196, 181, 253, .28);
+  }
+
+  .sb-sec:last-child {
+    border-bottom: none;
+  }
+
+  .sb-sec-reward {
+    padding-top: 0;
+  }
+
+  .sb-reward-bar {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    margin: 0 -18px;
+    padding: 14px 18px 12px;
+    margin-bottom: 14px;
+  }
+
+  .sb-reward-bar .sb-head {
+    color: rgba(255, 255, 255, .92);
+    margin-bottom: 0;
+  }
+
+  .sb-head {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: .9px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 11px;
+  }
+
+  .sb-head i {
+    font-size: 1rem;
+    color: var(--primary);
+  }
+
+  .sb-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.9rem;
+    color: var(--body-txt);
+    margin-bottom: 8px;
+  }
+
+  .sb-row:last-child {
+    margin-bottom: 0;
+  }
+/* Bottom spacing for the right sidebar column */
+.problem-grid > :nth-child(2) {
+  margin-bottom: 40px;
+}
+  .sb-row .lead-i {
+    color: var(--primary);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .sb-row .lbl {
+    flex: 1;
+    font-size: 0.9rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .chip-green {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .chip-amber {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .chip-purple {
+    background: var(--c3);
+    color: var(--secondary);
+  }
+
+  .sb-deadline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--c3);
+    border-radius: var(--r-sm);
+    padding: 10px 13px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--secondary);
+  }
+
+  .sb-about {
+    font-size: 0.9rem;
+    color: var(--body-txt);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .sb-person {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 7px;
+  }
+
+  .sb-avatar {
+    width: 30px;
+    height: 30px;
+    background: var(--c3);
+    border: 1.5px solid var(--c1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .sb-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .sb-role {
+    font-size: 0.85rem;
+  }
+
+  .sb-stars {
+    display: flex;
+    gap: 2px;
+    margin: 8px 0 7px;
+  }
+
+  .sb-stars i {
+    font-size: 1rem;
+    color: #f59e0b;
+  }
+
+  .sb-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--c3), var(--c2));
+    border: 1px solid var(--c1);
+    border-radius: 10px;
+    padding: 8px 13px;
+  }
+
+  .sb-rating .rv {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--secondary);
+  }
+
+  .sb-rating .rl {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* ========== FIXED GRID: no Bootstrap col classes inside ========== */
+  @media (min-width: 992px) {
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 28px;
+      align-items: start;
+    }
+    .sidebar-pushed {
+      margin-top: 190px !important;
+
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .problem-grid {
+      display: block;
+    }
+    .sidebar-pushed {
+      margin-top: 0 !important;
+      margin-bottom: 250px !important;
+    }
+
+    
+    .sb-sticky {
+      position: static;
+      top: auto;
+    }
+    .sb-tablet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .sb-tablet-grid .sb-sec {
+      border-bottom: none;
+      border-right: 1px solid rgba(196, 181, 253, .28);
+    }
+    .sb-tablet-grid .sb-sec:nth-child(even) {
+      border-right: none;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .pd-page {
+      padding: 18px 0 60px;
+    }
+    .sb-tablet-grid {
+      display: block;
+    }
+    .sb-tablet-grid .sb-sec {
+      border-right: none !important;
+      border-bottom: 1px solid rgba(196, 181, 253, .28) !important;
+    }
+    .sb-tablet-grid .sb-sec:last-child {
+      border-bottom: none !important;
+    }
+    .pd-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .anim { animation: fadeUp .42s cubic-bezier(.22, .68, 0, 1.15) both; }
+  .anim-1 { animation-delay: .04s; }
+  .anim-2 { animation-delay: .09s; }
+  .anim-3 { animation-delay: .14s; }
+  .anim-4 { animation-delay: .20s; }
+  .anim-5 { animation-delay: .26s; }
+  .anim-6 { animation-delay: .32s; }
+  .anim-7 { animation-delay: .38s; }
+  .anim-8 { animation-delay: .44s; }
+  .anim-sb { animation: fadeUp .48s cubic-bezier(.22, .68, 0, 1.15) .06s both; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pd-page">
+  <div class="container-xl px-3 px-md-4">
+
+    <!-- Breadcrumb -->
+    <nav class="pd-breadcrumb" aria-label="breadcrumb">
+      <a href="{% url 'explore' %}"><i class="bi bi-grid-3x3-gap-fill"></i> Marketplace</a>
+      <span class="sep">/</span>
+      <span class="cur">{{ problem.title|truncatechars:42 }}</span>
+    </nav>
+
+    <!-- CUSTOM GRID (Bootstrap columns removed to avoid conflict) -->
+    <div class="problem-grid">
+
+      <!-- LEFT COLUMN (no col-* classes) -->
+      <div>
+        <h1 class="pd-title anim anim-1">{{ problem.title }}</h1>
+
+        <!-- Company Badge -->
+        <div class="pd-badge anim anim-2">
+          <div class="pd-badge-icon"><i class="bi bi-shield-fill-check"></i></div>
+          {{ problem.company_name|default:"Netbank" }}
+        </div>
+
+        <!-- Intro -->
+        <p class="pd-intro anim anim-3">{{ problem.description }}</p>
+
+        <!-- Hero Image -->
+        <div class="pd-hero anim anim-4">
+          {% if problem.image %}
+          <img src="{{ problem.image.url }}" alt="{{ problem.title }}">
+          {% else %}
+          <div class="pd-hero-ph"><i class="bi bi-image"></i></div>
+          {% endif %}
+        </div>
+
+        <!-- Description -->
+        <div class="pd-card anim anim-5">
+          <div class="pd-card-head">Description</div>
+          <p>{{ problem.problem_statement|linebreaksbr|default:problem.description }}</p>
+        </div>
+
+        <!-- Requirements -->
+        <div class="pd-card-purple anim anim-6">
+          <div class="pd-card-head">Requirements</div>
+          <ul class="pd-list">
+            {% for line in problem.requirements.splitlines %}
+            <li><span class="li-dot"></span>{{ line }}</li>
+            {% empty %}
+            <li><span class="li-dot"></span>Redesign the onboarding flow for both mobile and web platforms</li>
+            <li><span class="li-dot"></span>Simplify the sign-up and identity verification process</li>
+            <li><span class="li-dot"></span>Create wireframes and high-fidelity UI screens</li>
+            <li><span class="li-dot"></span>Ensure the design is user-friendly and accessible</li>
+            <li><span class="li-dot"></span>Maintain consistency with fintech usability standards</li>
+            <li><span class="li-dot"></span>Focus on reducing drop-off points and improving completion rate</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Submission Guidelines -->
+        <div class="pd-card-lined anim anim-7">
+          <div class="pd-card-head">Submission Guidelines</div>
+          <ul class="pd-list">
+            {% for line in problem.submission_guidelines.splitlines %}
+            <li><span class="li-dot"></span>{{ line }}</li>
+            {% empty %}
+            <li><span class="li-dot"></span>Submit your design via Figma link or high-quality mockups</li>
+            <li><span class="li-dot"></span>Include user flow, wireframes, and final UI screens</li>
+            <li><span class="li-dot"></span>Clearly explain your design decisions and approach</li>
+            <li><span class="li-dot"></span>Optional: Add prototype link for better understanding</li>
+            <li><span class="li-dot"></span>Ensure your submission is clean, structured, and presentation-ready</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- CTA -->
+        <div class="anim anim-8">
+          <a href="{% url 'submit_solution' problem.id %}" class="pd-btn">
+            <i class="bi bi-lightning-fill"></i>
+            Solve This Problem
+          </a>
+        </div>
+      </div><!-- /left column -->
+
+      <!-- RIGHT SIDEBAR (no col-* classes) -->
+      <div class="anim-sb sidebar-pushed">
+        <div class="sb-sticky">
+          <div class="sb-wrap sb-tablet-grid">
+
+            <!-- Reward Box -->
+            <div class="sb-sec sb-sec-reward">
+              <div class="sb-reward-bar">
+                <div class="sb-head mb-0"><i class="bi bi-gift-fill"></i> Reward Box</div>
+              </div>
+              <div class="sb-row">
+                <i class="bi bi-currency-dollar lead-i"></i>
+                <span class="lbl">Reward</span>
+                <span class="chip chip-green">
+                  <i class="bi bi-cash-coin"></i>
+                  {{ problem.prize|default:"$500" }}
+                </span>
+              </div>
+              <div class="sb-row">
+                <i class="bi bi-hourglass-split lead-i"></i>
+                <span class="lbl">Time Left</span>
+                <span class="chip chip-amber">
+                  <i class="bi bi-clock-fill"></i>
+                  {{ problem.days_left|default:"6 days left" }}
+                </span>
+              </div>
+              <div class="sb-row">
+                <i class="bi bi-trophy-fill lead-i"></i>
+                <span class="lbl">Task</span>
+                <span class="chip chip-purple">
+                  <i class="bi bi-bar-chart-fill"></i>
+                  {{ problem.get_difficulty_display|default:"Easy" }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Deadline -->
+            <div class="sb-sec">
+              <div class="sb-head"><i class="bi bi-calendar-event-fill"></i> Deadline</div>
+              <div class="sb-deadline">
+                <i class="bi bi-clock"></i>
+                {{ problem.deadline|default:"April 30, 2026" }}
+              </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="sb-sec">
+              <div class="sb-head"><i class="bi bi-lightning-fill"></i> Quick Info</div>
+              <div class="sb-row">
+                <i class="bi bi-grid-fill lead-i"></i>
+                <span class="lbl">Category</span>
+                <strong style="color:var(--secondary); font-size:0.85rem;">
+                  {% if problem.tags.all %}{{ problem.tags.all.0.name }}{% else %}Fintech{% endif %}
+                </strong>
+              </div>
+              <div class="sb-row">
+                <i class="bi bi-display lead-i"></i>
+                <span class="lbl">Platform</span>
+                <strong style="color:var(--secondary); font-size:0.85rem;">
+                  {{ problem.platform|default:"Mobile+Web" }}
+                </strong>
+              </div>
+            </div>
+
+            <!-- About Company – DYNAMIC -->
+            <div class="sb-sec">
+              <div class="sb-head"><i class="bi bi-building-fill"></i> About Company</div>
+              <p class="sb-about">
+                {{ problem.company_description|default:"No company description provided." }}
+              </p>
+            </div>
+
+            <!-- Posted / Vetted By – DYNAMIC -->
+            <div class="sb-sec">
+              <div class="sb-head"><i class="bi bi-person-badge-fill"></i> Posted / Vetted By</div>
+              <div class="sb-person">
+                <div class="sb-avatar"><i class="bi bi-person-fill"></i></div>
+                <span class="sb-name">{{ problem.designer.name|default:"VTS Team" }}</span>
+              </div>
+              <div class="sb-person">
+                <div class="sb-avatar"><i class="bi bi-briefcase-fill"></i></div>
+                <span class="sb-role">{{ problem.designer.role|default:"Verified Partner" }}</span>
+              </div>
+              <div class="sb-stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+              </div>
+              <div class="sb-rating">
+                <i class="bi bi-star-fill"></i>
+                <span class="rv">{{ problem.designer.rating|default:"4.9" }}</span>
+                <span class="rl">Ratings</span>
+              </div>
+            </div>
+
+          </div><!-- /sb-wrap -->
+        </div><!-- /sb-sticky -->
+      </div><!-- /right sidebar -->
+
+    </div><!-- /problem-grid -->
+
+  </div><!-- /container-xl -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.anim, .anim-sb');
+    items.forEach(el => {
+      el.style.animationPlayState = 'paused';
+      el.style.opacity = '0';
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    items.forEach(el => observer.observe(el));
+
+    const sidebar = document.querySelector('.sb-sticky');
+    const mainCol = document.querySelector('.problem-grid > div:first-child');
+    if (sidebar && mainCol && window.innerWidth >= 992) {
+      const STICKY_OFFSET = 110;
+      window.addEventListener('scroll', () => {
+        const sbHeight = sidebar.offsetHeight;
+        const vpHeight = window.innerHeight;
+        if (sbHeight < vpHeight - STICKY_OFFSET) {
+          sidebar.style.position = 'sticky';
+          sidebar.style.top = STICKY_OFFSET + 'px';
+        } else {
+          const pageTop = document.documentElement.scrollTop;
+          const mainBottom = mainCol.getBoundingClientRect().bottom + pageTop;
+          const sbBottom = pageTop + vpHeight;
+          if (sbBottom >= mainBottom) {
+            sidebar.style.position = 'sticky';
+            sidebar.style.top = (vpHeight - sbHeight - STICKY_OFFSET) + 'px';
+          } else {
+            sidebar.style.position = 'sticky';
+            sidebar.style.top = STICKY_OFFSET + 'px';
+          }
+        }
+      }, { passive: true });
+    }
+  });
+</script>
+{% endblock %}

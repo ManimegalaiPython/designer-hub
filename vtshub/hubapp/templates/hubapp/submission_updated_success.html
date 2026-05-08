@@ -1,0 +1,164 @@
+{% extends 'hubapp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #ede9f8;
+    min-height: 100vh;
+    color: #333;
+  }
+
+  .page-wrapper {
+    padding: 28px 20px 40px 20px;
+    max-width: 890px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 28px;
+  }
+
+  /* ── Main card ── */
+  .success-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 48px 40px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* ── Check icon ── */
+  .check-icon-wrap {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 24px;
+  }
+
+  .check-icon-wrap img {
+    width: 150%;
+    height: 150%;
+    object-fit: contain;
+  }
+
+  /* ── Heading ── */
+  .success-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #5a3fa0;
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+
+  .success-subtitle {
+    font-size: 22px;
+    color: #666;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  /* ── Info list card ── */
+  .info-list {
+    width: 100%;
+    background: #ede9f8;
+    border-radius: 14px;
+    padding: 6px 0;
+    margin-bottom: 28px;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    font-size: 18px;
+    color: #333;
+    border-bottom: 1px solid #e0d8f5;
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  .info-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+  }
+
+  .info-highlight {
+    color: #6a3fcf;
+    font-weight: 600;
+  }
+
+  /* ── Button ── */
+  .btn-view {
+    background: #6a3fcf;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-view:active {
+    opacity: 0.85;
+  }
+</style>
+
+<div class="page-wrapper">
+
+  <div class="breadcrumb">Marketplace/Redesign/Submission Successful</div>
+
+  <div class="success-card">
+
+    <!-- Check icon -->
+    <div class="check-icon-wrap">
+      <img src="{% static 'hubapp/images/image 76.png' %}" alt="Success" />
+    </div>
+
+    <!-- Title -->
+    <div class="success-title">Your Submission Updated<br>Successfully</div>
+    <p class="success-subtitle">Your improved design has been saved and is<br>now under review.</p>
+
+    <!-- Info rows -->
+    <div class="info-list">
+      <div class="info-row">
+        <span class="info-icon">✅</span>
+        <span>Version: <span class="info-highlight">V2 Updated</span></span>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">🔄</span>
+        <span>Status : <span class="info-highlight">Under Review</span></span>
+      </div>
+      <div class="info-row">
+        <span class="info-icon" style="color:#ccc;">🕐</span>
+        <span>Last updated: <span class="info-highlight">Just Now</span></span>
+      </div>
+    </div>
+
+    <!-- Button -->
+    <a href="{% url 'update_submission' problem.pk %}" class="btn-view">View Submission</a>
+
+  </div>
+
+</div>
+
+{% endblock %}
