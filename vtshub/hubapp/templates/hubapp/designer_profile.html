@@ -954,22 +954,36 @@
             </div>
           </div>
           {% endif %}
-
-          {% if designer.experience_list %}
-          <div style="margin-bottom: 28px;">
-            <div class="card-heading"><i class="bi bi-briefcase-fill"></i> Experience</div>
-            {% for exp in designer.experience_list %}
-            <div class="exp-item">
-              <div class="exp-icon"><i class="bi bi-building"></i></div>
-              <div>
+{% if designer.experience_list %}
+    <div style="margin-bottom: 28px;">
+        <div class="card-heading"><i class="bi bi-briefcase-fill"></i> Experience</div>
+        {% for exp in designer.experience_list %}
+        <div class="exp-item">
+            <div class="exp-icon"><i class="bi bi-building"></i></div>
+            <div>
                 <div class="exp-title">{{ exp.title }}</div>
                 <div class="exp-company">{{ exp.company }}</div>
                 <div class="exp-date">{{ exp.period }}</div>
-              </div>
             </div>
-            {% endfor %}
-          </div>
-          {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+{% elif default_experience %}
+    {# Use default experience if designer has none #}
+    <div style="margin-bottom: 28px;">
+        <div class="card-heading"><i class="bi bi-briefcase-fill"></i> Experience</div>
+        {% for exp in default_experience %}
+        <div class="exp-item">
+            <div class="exp-icon"><i class="bi bi-building"></i></div>
+            <div>
+                <div class="exp-title">{{ exp.title }}</div>
+                <div class="exp-company">{{ exp.company }}</div>
+                <div class="exp-date">{{ exp.period }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
           <!-- Reviews -->
           <div style="margin-bottom: 28px;">

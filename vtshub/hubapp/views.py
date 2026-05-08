@@ -234,14 +234,64 @@ def upload(request):
 
 
 # ── DESIGNER PROFILE ─────────────────────────────────────────
+# ── DESIGNER PROFILE ─────────────────────────────────────────
 def designer_profile(request, designer_id):
-    designer        = get_object_or_404(Designer, id=designer_id)
+    designer = get_object_or_404(Designer, id=designer_id)
+
+    # ----- MASTER DEFAULT CONTENT (same as Sneha Iyer) -----
+    default_bio = (
+        "I am a passionate UI/UX designer with a strong focus on creating intuitive "
+        "and visually engaging digital experiences. I enjoy solving real-world problems "
+        "through user-centered design and thoughtful interaction patterns. With experience "
+        "in mobile and web design, I specialize in crafting clean interfaces, improving "
+        "usability, and delivering impactful design solutions."
+    )
+    default_education = "B.A in Graphic & Interactive Design – University of California, Berkeley (2018)"
+    default_skills = "UI/UX, Figma, Web App, Mobile Design, Adobe XD, Prototyping, User Experience"
+    default_experience = [
+        {"title": "Senior UI/UX Designer", "company": "XYZ Company", "period": "2022 - Present"},
+        {"title": "Product Designer", "company": "ABC Studio", "period": "2019 - 2022"},
+    ]
+
+    # Only set fields that are writable (CharField, TextField)
+    if not designer.bio:
+        designer.bio = default_bio
+    if not designer.education:
+        designer.education = default_education
+    if not designer.skills:
+        designer.skills = default_skills
+
+    # DO NOT assign to designer.experience_list (it’s not writable)
+    # Instead, we will pass default_experience to template.
+
+    # Featured case fallback
+    if not designer.featured_case:
+        designer.featured_case = DesignCase.objects.filter(is_featured=True).first()
+
+    # Portfolio cases fallback
     portfolio_cases = designer.designcase_set.prefetch_related('tags').all()
+    
+    if not portfolio_cases.exists():
+        # Hardcoded default portfolio by title order
+        default_titles = [
+            "Colorful Branding",
+            "Redesign a Fitness App",
+            "Habit Flow App",          # or merge with above?
+            "Grocery App UI",
+            "ONLINE PHARMACY",
+            "Cosmetic Website",
+            "Online Pharmacy Website",
+        ]
+        # Fetch existing cases that match these titles (order preserved)
+        portfolio_cases = list(DesignCase.objects.filter(title__in=default_titles))
+        # Optionally sort them to match default_titles order
+        title_order = {title: i for i, title in enumerate(default_titles)}
+        portfolio_cases.sort(key=lambda case: title_order.get(case.title, 999))
+
     return render(request, 'hubapp/designer_profile.html', {
-        'designer':        designer,
+        'designer': designer,
         'portfolio_cases': portfolio_cases,
     })
-
 
 # ── CASE DETAIL ──────────────────────────────────────────────
 def case_detail(request, pk):
