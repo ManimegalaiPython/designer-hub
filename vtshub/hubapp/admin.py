@@ -140,8 +140,8 @@ class MarketplaceStatAdmin(admin.ModelAdmin):
 # ── TRENDING CHALLENGE ──────────────────────────────────────
 @admin.register(TrendingChallenge)
 class TrendingChallengeAdmin(admin.ModelAdmin):
-    list_display = ('order', 'badge_type', 'title', 'company', 'reward', 'designers_count', 'closing_text', 'closing_color')
-    list_editable = ('order', 'badge_type', 'title', 'company', 'reward', 'designers_count', 'closing_text', 'closing_color')
+    list_display = ('order', 'badge_type', 'title', 'company', 'reward', 'designers_count', 'closing_text', 'closing_color', 'case')
+    list_editable = ('order', 'badge_type', 'title', 'company', 'reward', 'designers_count', 'closing_text', 'closing_color', 'case')   
     list_display_links = None
     list_filter = ('badge_type', 'closing_color')
     search_fields = ('title', 'company')
@@ -149,8 +149,11 @@ class TrendingChallengeAdmin(admin.ModelAdmin):
         ('Basic Info', {
             'fields': ('order', 'badge_type', 'title', 'company', 'reward', 'designers_count')
         }),
+        ('Link to Design Case (for "Solve Now")', {
+            'fields': ('case', 'link')     # ← add this line
+        }),
         ('Closing Info', {
-            'fields': ('closing_text', 'closing_color', 'link')
+            'fields': ('closing_text', 'closing_color')
         }),
         ('Image', {
             'fields': ('image',)

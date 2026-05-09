@@ -131,7 +131,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_API_KEY = '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'
 
 
 # Real email via Gmail SMTP

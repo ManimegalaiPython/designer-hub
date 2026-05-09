@@ -382,6 +382,7 @@ class TrendingChallenge(models.Model):
     closing_color = models.CharField(max_length=10, choices=CLOSING_COLOR_CHOICES, default='red')
     link = models.URLField(blank=True, help_text="Optional custom URL, else defaults to problem detail")
     image = models.ImageField(upload_to='trending/', blank=True, null=True, help_text="Upload an image for this trending challenge")
+    case = models.ForeignKey('DesignCase', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         ordering = ['order']

@@ -865,8 +865,7 @@
           <span class="closing-badge {% if challenge.closing_color == 'blue' %}blue{% endif %}">
             <i class="bi bi-circle-fill" style="font-size:8px;"></i> {{ challenge.closing_text }}
           </span>
-          <a href="{{ challenge.link|default:'case_details' }}" class="btn-solve-sm">Solve Now</a>
-        </div>
+<a href="{% url 'case_detail' challenge.case.id %}" class="btn-solve-sm">Solve Now</a>        </div>
       </div>
       {% empty %}
       <div class="empty-state" style="grid-column:1/-1;">
